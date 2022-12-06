@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share_buisness_front_end/pages/side_menu.dart';
+
+import '../main.dart';
 
 class Debit extends StatefulWidget {
   const Debit({Key? key}) : super(key: key);
@@ -19,28 +22,32 @@ class _DebitState extends State<Debit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text(''),
+          backgroundColor: Colors.black,),
+        drawer: SideMenu(),
         backgroundColor: Colors.white70,
         body: SafeArea(
           child: Center(
             child: Column(
               children: [
-                Text("Мойка: " + wash, style: TextStyle(fontSize: 60)),
-                SizedBox(height: 50),
-                Text("Пост: " + post, style: TextStyle(fontSize: 60)),
-                SizedBox(height: 50),
-                Text("Баланс: " + balance.toString(), style: TextStyle(fontSize: 60)),
-                SizedBox(height: 50),
-                Text("Будет начислено: " + balance.toString(), style: TextStyle(fontSize: 60)),
-                SizedBox(height: 50),
-                Text("Списать бонусы: " +  _currentSliderValue.toInt().toString(), style: TextStyle(fontSize: 60)),
+                Text("Мойка: " + wash, style: TextStyle(fontSize: 30)),
+                SizedBox(height: 30),
+                Text("Пост: " + post, style: TextStyle(fontSize: 30)),
+                SizedBox(height: 30),
+                Text("Баланс: " + balance.toString(), style: TextStyle(fontSize: 30)),
+                SizedBox(height: 30),
+                Text("Будет начислено: " + balance.toString(), style: TextStyle(fontSize: 30)),
+                SizedBox(height: 30),
+                Text("Списать бонусы: " +  _currentSliderValue.toInt().toString(), style: TextStyle(fontSize: 30)),
                 SizedBox(height: 30),
                 SliderTheme(
                     data: SliderThemeData(
-                      trackHeight: 50,
-                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 30),
+                      trackHeight: 20,
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10),
                       valueIndicatorShape: PaddleSliderValueIndicatorShape(),
                         valueIndicatorTextStyle: TextStyle(
-                          fontSize: 1,
+                          fontSize: 0,
                           color: Colors.white,
                         )
                     ),
@@ -56,36 +63,42 @@ class _DebitState extends State<Debit> {
                       },
                     )
                 ),
-                SizedBox(height: 600),
+                SizedBox(height: 50),
                 Row(
                   children: [
-                    SizedBox(
-                        height: 200,
-                        width: 350,
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 50.0),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
+                    Align(
+                      alignment: FractionalOffset.centerLeft,
+                      child: SizedBox(
+                          height: 100,
+                          width: 150,
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                              ),
+                              onPressed: () => {},
+                              child: Text("Отмена", style: TextStyle(fontSize: 30),),
                             ),
-                            onPressed: () => {},
-                            child: Text("Отмена", style: TextStyle(fontSize: 60),),
-                          ),
-                        )
+                          )
+                      )
                     ),
-                    SizedBox(width: 200),
-                    SizedBox(
-                        height: 200,
-                        width: 350,
-                        child: Container(
-                            margin: const EdgeInsets.only(right: 50.0),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
+                    SizedBox(width: 60),
+                    Align(
+                      alignment: FractionalOffset.centerRight,
+                      child: SizedBox(
+                          height: 100,
+                          width: 150,
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 10.0),
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                              ),
+                              onPressed: () => {},
+                              child: Text("ОК", style: TextStyle(fontSize: 30),),
                             ),
-                            onPressed: () => {},
-                            child: Text("ОК", style: TextStyle(fontSize: 60),),
-                          ),
-                        )
-                    ),
+                          )
+                      ),
+                    )
                   ],
                 )
               ],
