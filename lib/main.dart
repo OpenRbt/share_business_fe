@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:share_buisness_front_end/pages/debit.dart';
@@ -18,7 +19,19 @@ final routemaster = RoutemasterDelegate(
   routesBuilder: (context) => routes,
 );
 
-void main() {
+void main() async {
+  await Firebase.initializeApp(
+    // Replace with actual values
+    options: FirebaseOptions(
+        apiKey: jsonData['apiKey'],
+        apiKey: jsonData['authDomain'],
+        apiKey:jsonData['projectId'],
+        apiKey: jsonData['storageBucket'],
+        apiKey: jsonData['messagingSenderId'],
+        apiKey: jsonData['appId'],
+        apiKey: jsonData['measurementId']
+    ),
+  );
   runApp(MaterialApp.router(
     routerDelegate: routemaster,
     routeInformationParser: RoutemasterParser(),
