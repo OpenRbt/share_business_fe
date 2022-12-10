@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
@@ -11,7 +12,6 @@ final routes = RouteMap(
       '/': (_) => MaterialPage(child: Login()),
       '/debit': (_) => MaterialPage(child: Debit()),
       '/profile': (_) => MaterialPage(child: Profile()),
-      '/side-menu': (_) => MaterialPage(child: SideMenu()),
     }
 );
 
