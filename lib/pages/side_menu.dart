@@ -24,26 +24,95 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30),
+            bottomRight: Radius.circular(30)),
+      ),
+      backgroundColor: Color.fromRGBO(68, 68, 68, 1),
+        child:
+        Column(
           children: [
-            DrawerHeader(child: new Text(user!.email.toString()),),
-            ListTile(
-              title: Text('Профиль'),
-              onTap: () {routemaster.push('/profile');},
+            Container(
+            height: 32,
+            alignment: Alignment.centerLeft,
+            margin: const EdgeInsets.fromLTRB(85, 18, 85, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
+            color: Color.fromRGBO(227,1,15, 1),
+            child: Center(
+              child: Text('DIA Electronics',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    fontFamily: 'Teko',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w300,
+                    fontSize: 30
+                ),
+              ),
+            )
+        ),
+            SizedBox(height: 100,),
+            SizedBox(
+              height: 100,
+              width: 200,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    side: MaterialStateBorderSide.resolveWith((states) => BorderSide(width: 3, color: Colors.white)),
+                    backgroundColor: MaterialStatePropertyAll<Color>(Color.fromRGBO(68, 68, 68, 1)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+
+                          borderRadius: BorderRadius.circular(10),
+                        )
+                    )
+                ),
+                onPressed: () {routemaster.push('/profile');},
+
+                child: Text('Перейти\nв профиль',
+                  //textAlign: Alignment.centerLeft,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontFamily: 'RobotoCondensed',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
             ),
-            ListTile(
-              title: Text('Выход'),
-              onTap: () async {
-                setState(() {
-                  _isSigningOut = true;
-                });
-                await Authentication.signOut(context: context);
-                setState(() {
-                  _isSigningOut = false;
-                });
-                //routemaster.push('/');
-              },
-            ),
+            SizedBox(height: 400,),
+            SizedBox(
+              height: 50,
+              width: 150,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    side: MaterialStateBorderSide.resolveWith((states) => BorderSide(width: 3, color: Colors.white)),
+                    backgroundColor: MaterialStatePropertyAll<Color>(Colors.white),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+
+                          borderRadius: BorderRadius.circular(1),
+                        )
+                    )
+                ),
+                onPressed: () async {
+                  setState(() {
+                    _isSigningOut = true;
+                  });
+                  await Authentication.signOut(context: context);
+                  setState(() {
+                    _isSigningOut = false;
+                  });
+                  //routemaster.push('/');
+                },
+                child: Text('Выйти',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontFamily: 'RobotoCondensed',
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),),
+              ),
+            )
           ],
         )
     );

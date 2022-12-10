@@ -17,10 +17,10 @@ class Authentication {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
     User? user = FirebaseAuth.instance.currentUser;
-
+/*
     if (user != null) {
       routemaster.push('/profile');
-    }/*
+    }
     else{
       routemaster.push('/');
     }
