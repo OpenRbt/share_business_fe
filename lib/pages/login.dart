@@ -5,15 +5,19 @@ import '../main.dart';
 import '../service/authentication.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  final bool signedIn = false;
 
   @override
-  State<Login> createState() => _LoginViewState();
+  State<Login> createState() => _LoginViewState(this.signedIn);
 }
 
 class _LoginViewState extends State<Login> {
 
-  bool _isSigningIn = false;
+  late bool _isSigningIn;
+
+  _LoginViewState(bool _isSigningIn){
+    this._isSigningIn = _isSigningIn;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +38,10 @@ class _LoginViewState extends State<Login> {
                           alignment: FractionalOffset.bottomCenter,
                           child: _isSigningIn
                               ? CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                           )
                               :SizedBox(
-                              height: 200,
+                              height: 150,
                               width: 300,
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 100.0),
@@ -60,7 +64,7 @@ class _LoginViewState extends State<Login> {
                                       routemaster.push('/profile');
                                     }
                                   },
-                                  child: Text("Войти", style: TextStyle(fontSize: 30),),
+                                  child: Text("Войти", style: TextStyle(fontSize: 25),),
                                 ),
                               )
                           )

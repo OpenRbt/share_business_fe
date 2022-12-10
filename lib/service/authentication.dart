@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,8 +20,11 @@ class Authentication {
 
     if (user != null) {
       routemaster.push('/profile');
+    }/*
+    else{
+      routemaster.push('/');
     }
-
+    */
     return firebaseApp;
   }
 
@@ -95,6 +100,7 @@ class Authentication {
         await googleSignIn.signOut();
       }
       await FirebaseAuth.instance.signOut();
+      log("Singned out");
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         Authentication.customSnackBar(
