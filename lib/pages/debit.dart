@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:share_buisness_front_end/pages/side_menu.dart';
 
 import '../main.dart';
+
+final URL = "";
+//user/get
 
 class Debit extends StatefulWidget {
 
@@ -21,13 +27,14 @@ class _DebitState extends State<Debit> {
   late var wash = "1";
   late var post = "1";
   late var balance = 100;
-  late var bonus = 100;
+  late var bonus = balance;
   late var _currentSliderValue = bonus;
 
   @override
   void initState() {
     super.initState();
-
+    //var d = await getUser(userid, apiKey);
+    txt.text = bonus.toString();
     _everySecond = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         user =  FirebaseAuth.instance.currentUser;
@@ -156,6 +163,7 @@ class _DebitState extends State<Debit> {
                   width: 100,
                   height: 45,
                   child: TextField(
+
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: 'Roboto',
@@ -164,7 +172,18 @@ class _DebitState extends State<Debit> {
                     controller: txt,
                     keyboardType: TextInputType.number,
                     onChanged: (text) {
-
+                      if(text.isEmpty){
+                      setState(() {
+                        _currentSliderValue = 0;
+                        bonus = 0;
+                      });
+                      }
+                      else if(int.parse(text) > 0 && int.parse(text) < balance){
+                        setState(() {
+                          _currentSliderValue = int.parse(txt.text);
+                          bonus = _currentSliderValue;
+                        });
+                      }
                     },
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -207,7 +226,15 @@ class _DebitState extends State<Debit> {
                                   )
                               )
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                              if(bonus > 0){
+                                setState(() {
+                                  bonus--;
+                                  _currentSliderValue = bonus;
+                                  txt.text = bonus.toString();
+                                });
+                              }
+                          },
                           child: Text('-',
                           style: TextStyle(
                             fontSize: 25,
@@ -231,12 +258,14 @@ class _DebitState extends State<Debit> {
                         ),
                         child: Slider(
                           value: _currentSliderValue.toDouble(),
-                          max: bonus.toDouble(),
-                          divisions: bonus.toInt(),
+                          max: balance.toDouble(),
+                          divisions: balance.toInt(),
                           label: _currentSliderValue.round().toString(),
                           onChanged: (double value) {
                             setState(() {
                               _currentSliderValue = value.toInt();
+                              txt.text = value.toInt().toString();
+                              bonus = _currentSliderValue;
                             });
                           },
                         )
@@ -253,7 +282,15 @@ class _DebitState extends State<Debit> {
                                 )
                             )
                         ),
-                          onPressed: ()  {},
+                          onPressed: ()  {
+                              if(bonus < balance){
+                                setState(() {
+                                  bonus++;
+                                  _currentSliderValue = bonus;
+                                  txt.text = bonus.toString();
+                                });
+                              }
+                          },
                           child: Text('+',
                             textAlign: TextAlign.center,
                               style: TextStyle(
@@ -330,4 +367,28 @@ class _DebitState extends State<Debit> {
     ) :
         Container();
   }
+
+  Future<http.Response> getUser(userid, apiKey) {
+    return http.post(
+      Uri.parse(URL + '/user/get'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': apiKey,
+      },
+      body: jsonEncode(<String, String>{
+        'id': userid,
+      }),
+    );
+  }
+
+  Future<String> fetchData() async {
+    final resp = await http.get(Uri.http(URL + '/'));
+
+    if (resp.statusCode == 200) {
+      return resp.body;
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+
 }
