@@ -38,18 +38,7 @@ class _SideMenuState extends State<SideMenu> {
             alignment: Alignment.centerLeft,
             margin: const EdgeInsets.fromLTRB(85, 18, 85, 0),
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
-            color: Color.fromRGBO(227,1,15, 1),
-            child: Center(
-              child: Text('DIA Electronics',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontFamily: 'Teko',
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 30
-                ),
-              ),
-            )
+            child: Image.asset("assets/wash_logo.png", width: 200, height: 200,),
         ),
             SizedBox(height: 100,),
             SizedBox(
@@ -67,9 +56,7 @@ class _SideMenuState extends State<SideMenu> {
                     )
                 ),
                 onPressed: () {routemaster.push('/profile');},
-
-                child: Text('Перейти\nв профиль',
-                  //textAlign: Alignment.centerLeft,
+                child: Text('Перейти в профиль',
                   style: TextStyle(
                     fontSize: 30,
                     fontFamily: 'RobotoCondensed',
@@ -79,7 +66,7 @@ class _SideMenuState extends State<SideMenu> {
                 ),
               ),
             ),
-            SizedBox(height: 400,),
+            SizedBox(height: 40,),
             SizedBox(
               height: 50,
               width: 150,
@@ -89,7 +76,6 @@ class _SideMenuState extends State<SideMenu> {
                     backgroundColor: MaterialStatePropertyAll<Color>(Colors.white),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
-
                           borderRadius: BorderRadius.circular(1),
                         )
                     )
