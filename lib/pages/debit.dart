@@ -7,7 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/side_menu.dart';
+import 'package:share_buisness_front_end/utils/common.dart';
 
 import '../main.dart';
 
@@ -30,10 +32,14 @@ class _DebitState extends State<Debit> {
   late var bonus = balance;
   late var _currentSliderValue = bonus;
 
+  final ValueNotifier<String> _washId = ValueNotifier("Loading...");
+  final ValueNotifier<String> _postId = ValueNotifier("Loading...");
+  final ValueNotifier<String> _washBalance = ValueNotifier("Loading...");
+  late Timer _profileRefresh;
+
   @override
   void initState() {
     super.initState();
-    //var d = await getUser(userid, apiKey);
     txt.text = bonus.toString();
     _everySecond = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
@@ -51,61 +57,28 @@ class _DebitState extends State<Debit> {
     super.dispose();
   }
 
+  // Future<void> _refreshSession() async {
+  //   Session? prof = await Common.sessionApi!.session();
+  //   _.value = prof?.id ?? "";
+  //   _balance.value = prof?.balance ?? "";
+  // }
+
   @override
   Widget build(BuildContext context) {
     return user != null ? Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(50.0),
           child: AppBar(
-            titleSpacing: -50,
-            //titleSpacing: 220,
-            surfaceTintColor: Colors.white,
-            leadingWidth: 120,
-            leading: Builder(
-              builder: (BuildContext context) {
-                return
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.fromLTRB(0, 18, 60, 0),
-                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    color: Color.fromRGBO(68,68,68, 1),
-
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_forward_ios_sharp,
-                      ),
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      color: Colors.white,
-                      onPressed: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-                    ),
-                  );
-              },
+            title: Image.asset(
+              "assets/wash_logo.png",
+              width: 200,
+              height: 200,
             ),
-            title: Container(
-                height: 32,
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.fromLTRB(0, 18, 200, 0),
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
-                color: Color.fromRGBO(227,1,15, 1),
-                child: Center(
-                  child: Text('DIA Electronics',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontFamily: 'Teko',
-                        color: Colors.white,
-                        fontWeight: FontWeight.w300,
-                        fontSize: 30
-                    ),
-                  ),
-                )
-            ),
+            elevation: 0,
+            centerTitle: false,
             shadowColor: Colors.white,
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
-            iconTheme: IconThemeData(),
           ),
         ),
         drawer: SideMenu(),

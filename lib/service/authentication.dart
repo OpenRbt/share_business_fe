@@ -11,20 +11,11 @@ import '../main.dart';
 
 class Authentication {
 
-  static Future<FirebaseApp> initializeFirebase({
-    required BuildContext context,
-  }) async {
+  static Future<FirebaseApp> initializeFirebase({required BuildContext context}) async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
 
     User? user = FirebaseAuth.instance.currentUser;
-/*
-    if (user != null) {
-      routemaster.push('/profile');
-    }
-    else{
-      routemaster.push('/');
-    }
-    */
+
     return firebaseApp;
   }
 
