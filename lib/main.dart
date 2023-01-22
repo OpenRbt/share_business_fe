@@ -11,8 +11,8 @@ import 'package:share_buisness_front_end/utils/common.dart';
 
 final routes = RouteMap(
     routes: {
-      '/': (_) => MaterialPage(child: Login()),
-      '/debit': (_) => MaterialPage(child: Debit()),
+      '/': (route) => MaterialPage(child: Login(wash: route.queryParameters['wash'], post: route.queryParameters['post'])),
+      '/debit': (route) => MaterialPage(child: Debit(wash: route.queryParameters['wash'], post: route.queryParameters['post'])),
       '/profile': (_) => MaterialPage(child: ProfilePage()),
     }
 );

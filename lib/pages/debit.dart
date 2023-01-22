@@ -17,17 +17,31 @@ final URL = "";
 //user/get
 
 class Debit extends StatefulWidget {
+  late String wash;
+  late String post;
+
+  Debit({String? wash, String? post}){
+    this.wash = wash!;
+    this.post = post!;
+  }
 
   @override
-  State<Debit> createState() => _DebitState();
+  State<Debit> createState() => _DebitState(wash: this.wash, post: this.post);
 }
 
 class _DebitState extends State<Debit> {
+
+  late String wash;
+  late String post;
+
+  _DebitState({String? wash, String? post}){
+    this.wash = wash!;
+    this.post = post!;
+  }
+
   var txt = TextEditingController();
   late Timer _everySecond;
   User? user = FirebaseAuth.instance.currentUser;
-  late var wash = "1";
-  late var post = "1";
   late var balance = 100;
   late var bonus = balance;
   late var _currentSliderValue = bonus;
