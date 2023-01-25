@@ -10,12 +10,11 @@
 
 part of openapi.api;
 
-class Profile {
-  /// Returns a new [Profile] instance.
-  Profile({
-    this.id,
-    this.active,
-    this.balance,
+class WashServer {
+  /// Returns a new [WashServer] instance.
+  WashServer({
+    this.name,
+    this.description,
   });
 
   ///
@@ -24,7 +23,7 @@ class Profile {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? id;
+  String? name;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -32,56 +31,41 @@ class Profile {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  bool? active;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? balance;
+  String? description;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Profile &&
-     other.id == id &&
-     other.active == active &&
-     other.balance == balance;
+  bool operator ==(Object other) => identical(this, other) || other is WashServer &&
+     other.name == name &&
+     other.description == description;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (active == null ? 0 : active!.hashCode) +
-    (balance == null ? 0 : balance!.hashCode);
+    (name == null ? 0 : name!.hashCode) +
+    (description == null ? 0 : description!.hashCode);
 
   @override
-  String toString() => 'Profile[id=$id, active=$active, balance=$balance]';
+  String toString() => 'WashServer[name=$name, description=$description]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.id != null) {
-      json[r'id'] = this.id;
+    if (this.name != null) {
+      json[r'Name'] = this.name;
     } else {
-      json[r'id'] = null;
+      json[r'Name'] = null;
     }
-    if (this.active != null) {
-      json[r'active'] = this.active;
+    if (this.description != null) {
+      json[r'Description'] = this.description;
     } else {
-      json[r'active'] = null;
-    }
-    if (this.balance != null) {
-      json[r'balance'] = this.balance;
-    } else {
-      json[r'balance'] = null;
+      json[r'Description'] = null;
     }
     return json;
   }
 
-  /// Returns a new [Profile] instance and imports its values from
+  /// Returns a new [WashServer] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static Profile? fromJson(dynamic value) {
+  static WashServer? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -90,26 +74,25 @@ class Profile {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "Profile[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Profile[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "WashServer[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "WashServer[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return Profile(
-        id: mapValueOfType<String>(json, r'id'),
-        active: mapValueOfType<bool>(json, r'active'),
-        balance: mapValueOfType<int>(json, r'balance'),
+      return WashServer(
+        name: mapValueOfType<String>(json, r'Name'),
+        description: mapValueOfType<String>(json, r'Description'),
       );
     }
     return null;
   }
 
-  static List<Profile>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <Profile>[];
+  static List<WashServer>? listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <WashServer>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = Profile.fromJson(row);
+        final value = WashServer.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -118,12 +101,12 @@ class Profile {
     return result.toList(growable: growable);
   }
 
-  static Map<String, Profile> mapFromJson(dynamic json) {
-    final map = <String, Profile>{};
+  static Map<String, WashServer> mapFromJson(dynamic json) {
+    final map = <String, WashServer>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = Profile.fromJson(entry.value);
+        final value = WashServer.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -132,13 +115,13 @@ class Profile {
     return map;
   }
 
-  // maps a json object with a list of Profile-objects as value to a dart map
-  static Map<String, List<Profile>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<Profile>>{};
+  // maps a json object with a list of WashServer-objects as value to a dart map
+  static Map<String, List<WashServer>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<WashServer>>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = Profile.listFromJson(entry.value, growable: growable,);
+        final value = WashServer.listFromJson(entry.value, growable: growable,);
         if (value != null) {
           map[entry.key] = value;
         }

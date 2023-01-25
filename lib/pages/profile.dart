@@ -6,22 +6,31 @@ import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/side_menu.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
 
-import '../main.dart';
-
 class ProfilePage extends StatefulWidget {
 
+  late String sessionID;
+
+  ProfilePage({String? sessionID}){
+    this.sessionID = sessionID!;
+  }
+
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePage> createState() => _ProfilePageState(sessionID: this.sessionID);
 }
 
 class _ProfilePageState extends State<ProfilePage> {
 
+  late String sessionID;
   User? user = FirebaseAuth.instance.currentUser;
   bool _isSigningIn = false;
 
   final ValueNotifier<String> _id = ValueNotifier("Loading...");
   final ValueNotifier<String> _balance = ValueNotifier("Loading...");
   late Timer _profileRefresh;
+
+  _ProfilePageState({String? sessionID}){
+    this.sessionID = sessionID!;
+  }
 
   @override
   void initState() {
@@ -37,18 +46,16 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _refreshProfile() async {
-    Profile? prof = await Common.userApi!.callGet();
+    Profile? prof = await Common.userApi!.getProfile();
     _id.value = prof?.id ?? "";
-    _balance.value = prof?.balance ?? "";
+    _balance.value = prof?.balance.toString() ?? "";
   }
 
   @override
   Widget build(BuildContext context) {
     return user != null ?
     Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
-          child: AppBar(
+        appBar: AppBar(
             title: Image.asset(
               "assets/wash_logo.png",
               width: 200,
@@ -60,8 +67,8 @@ class _ProfilePageState extends State<ProfilePage> {
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
           ),
-        ),
-        drawer: SideMenu(),
+
+        drawer: SideMenu(sessionID: this.sessionID),
         backgroundColor: Colors.white,
         body: SafeArea(
               child: Center(

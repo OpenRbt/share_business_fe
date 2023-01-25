@@ -16,8 +16,49 @@ class UserApi {
 
   final ApiClient apiClient;
 
+  /// Performs an HTTP 'GET /profile/balance' operation and returns the [Response].
+  Future<Response> getBalanceWithHttpInfo() async {
+    // ignore: prefer_const_declarations
+    final path = r'/profile/balance';
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  Future<GetBalance200Response?> getBalance() async {
+    final response = await getBalanceWithHttpInfo();
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'GetBalance200Response',) as GetBalance200Response;
+    
+    }
+    return null;
+  }
+
   /// Performs an HTTP 'GET /profile' operation and returns the [Response].
-  Future<Response> callGetWithHttpInfo() async {
+  Future<Response> getProfileWithHttpInfo() async {
     // ignore: prefer_const_declarations
     final path = r'/profile';
 
@@ -42,8 +83,8 @@ class UserApi {
     );
   }
 
-  Future<Profile?> callGet() async {
-    final response = await callGetWithHttpInfo();
+  Future<Profile?> getProfile() async {
+    final response = await getProfileWithHttpInfo();
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

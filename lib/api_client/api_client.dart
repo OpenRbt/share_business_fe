@@ -181,16 +181,20 @@ class ApiClient {
           return valueString == 'true' || valueString == '1';
         case 'DateTime':
           return value is DateTime ? value : DateTime.tryParse(value);
+        case 'BonusCharge':
+          return BonusCharge.fromJson(value);
         case 'Error':
           return Error.fromJson(value);
-        case 'HealthCheck200Response':
-          return HealthCheck200Response.fromJson(value);
+        case 'GetBalance200Response':
+          return GetBalance200Response.fromJson(value);
+        case 'GetHealthCheck200Response':
+          return GetHealthCheck200Response.fromJson(value);
         case 'Profile':
           return Profile.fromJson(value);
         case 'Session':
           return Session.fromJson(value);
-        case 'SessionPost':
-          return SessionPost.fromJson(value);
+        case 'WashServer':
+          return WashServer.fromJson(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

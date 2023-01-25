@@ -17,72 +17,65 @@ final URL = "";
 //user/get
 
 class Debit extends StatefulWidget {
-  late String wash;
-  late String post;
+  late String sessionID;
 
-  Debit({String? wash, String? post}){
-    this.wash = wash!;
-    this.post = post!;
+  Debit({String? sessionID}){
+    this.sessionID = sessionID!;
   }
 
   @override
-  State<Debit> createState() => _DebitState(wash: this.wash, post: this.post);
+  State<Debit> createState() => _DebitState(sessionID: this.sessionID);
 }
 
 class _DebitState extends State<Debit> {
 
-  late String wash;
-  late String post;
+  late String sessionID;
 
-  _DebitState({String? wash, String? post}){
-    this.wash = wash!;
-    this.post = post!;
+  _DebitState({String? sessionID}){
+    this.sessionID = sessionID!;
   }
 
   var txt = TextEditingController();
   late Timer _everySecond;
   User? user = FirebaseAuth.instance.currentUser;
-  late var balance = 100;
-  late var bonus = balance;
-  late var _currentSliderValue = bonus;
 
   final ValueNotifier<String> _washId = ValueNotifier("Loading...");
   final ValueNotifier<String> _postId = ValueNotifier("Loading...");
-  final ValueNotifier<String> _washBalance = ValueNotifier("Loading...");
+  final ValueNotifier<int> _washBalance = ValueNotifier(0);
   late Timer _profileRefresh;
+
+  @override
+  void dispose() {
+    _profileRefresh.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refreshSession() async {
+    Session? session = await Common.sessionApi!.getSession(sessionID);
+      _washId.value = session?.postID.toString() ?? "";
+      _postId.value = session?.postID.toString() ?? "";
+      _washBalance.value = session?.postBalance ?? 0;
+   }
+
+  late var bonus = _washBalance.value;
+  late var _currentSliderValue = bonus;
 
   @override
   void initState() {
     super.initState();
     txt.text = bonus.toString();
-    _everySecond = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      setState(() {
-        user =  FirebaseAuth.instance.currentUser;
-        if(user == null){
-          routemaster.push('/');
-        }
-      });
-    });
+    _profileRefresh = Timer(const Duration(seconds: 1), _refreshSession);
   }
 
-  @override
-  void dispose() {
-    _everySecond.cancel();
-    super.dispose();
+  Future sendBonuses() async {
+    await Common.sessionApi!.chargeBonus(sessionID, body: BonusCharge(amount: bonus));
   }
-
-  // Future<void> _refreshSession() async {
-  //   Session? prof = await Common.sessionApi!.session();
-  //   _.value = prof?.id ?? "";
-  //   _balance.value = prof?.balance ?? "";
-  // }
 
   @override
   Widget build(BuildContext context) {
     return user != null ? Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
-          child: AppBar(
+        drawer: SideMenu(sessionID: this.sessionID),
+          appBar: AppBar(
             title: Image.asset(
               "assets/wash_logo.png",
               width: 200,
@@ -94,8 +87,6 @@ class _DebitState extends State<Debit> {
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
           ),
-        ),
-        drawer: SideMenu(),
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Container(
@@ -105,13 +96,13 @@ class _DebitState extends State<Debit> {
                     child: Column(
                       children: [
                         SizedBox(height: 50),
-                        Text("Мойка: " + wash, style: TextStyle(
+                        Text("Мойка: " + _washId.value, style: TextStyle(
                           fontSize: 30,
                           fontFamily: 'Roboto',
                           color: Colors.black,
                         )),
                         SizedBox(height: 10),
-                        Text("Пост: " + post, style: TextStyle(
+                        Text("Пост: " + _postId.value, style: TextStyle(
                           fontSize: 24,
                           fontFamily: 'Roboto',
                           color: Colors.black,
@@ -127,12 +118,12 @@ class _DebitState extends State<Debit> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 30),
-                      Text("Баланс бонусов: " + balance.toString(), style: TextStyle(
+                      Text("Баланс бонусов: " + _washBalance.value.toString(), style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'Roboto',
                         color: Colors.black,)),
                       SizedBox(height: 10),
-                      Text("Будет начислено бонусов: " + balance.toString(), style: TextStyle(
+                      Text("Будет начислено бонусов: " + _washBalance.value.toString(), style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'Roboto',
                         color: Colors.black,)),
@@ -165,7 +156,7 @@ class _DebitState extends State<Debit> {
                         bonus = 0;
                       });
                       }
-                      else if(int.parse(text) > 0 && int.parse(text) < balance){
+                      else if(int.parse(text) > 0 && int.parse(text) < _washBalance.value){
                         setState(() {
                           _currentSliderValue = int.parse(txt.text);
                           bonus = _currentSliderValue;
@@ -245,8 +236,8 @@ class _DebitState extends State<Debit> {
                         ),
                         child: Slider(
                           value: _currentSliderValue.toDouble(),
-                          max: balance.toDouble(),
-                          divisions: balance.toInt(),
+                          max: _washBalance.value.toDouble(),
+                          divisions: _washBalance.value == 0 ? (_washBalance.value+1).toInt(): _washBalance.value.toInt(),
                           label: _currentSliderValue.round().toString(),
                           onChanged: (double value) {
                             setState(() {
@@ -270,7 +261,7 @@ class _DebitState extends State<Debit> {
                             )
                         ),
                           onPressed: ()  {
-                              if(bonus < balance){
+                              if(bonus < _washBalance.value){
                                 setState(() {
                                   bonus++;
                                   _currentSliderValue = bonus;
@@ -335,7 +326,7 @@ class _DebitState extends State<Debit> {
                                     )
                                 )
                             ),
-                            onPressed: () => {},
+                            onPressed: () => {sendBonuses()},
                             child: Text("Подтвердить", style: TextStyle(
                               fontSize: 18,
                               fontFamily: 'RobotoCondensed',
@@ -353,29 +344,6 @@ class _DebitState extends State<Debit> {
         )
     ) :
         Container();
-  }
-
-  Future<http.Response> getUser(userid, apiKey) {
-    return http.post(
-      Uri.parse(URL + '/user/get'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': apiKey,
-      },
-      body: jsonEncode(<String, String>{
-        'id': userid,
-      }),
-    );
-  }
-
-  Future<String> fetchData() async {
-    final resp = await http.get(Uri.http(URL + '/'));
-
-    if (resp.statusCode == 200) {
-      return resp.body;
-    } else {
-      throw Exception('Failed to fetch data');
-    }
   }
 
 }
