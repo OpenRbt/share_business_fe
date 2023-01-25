@@ -8,27 +8,23 @@ import '../main.dart';
 import '../service/authentication.dart';
 
 class Login extends StatefulWidget {
-  late String wash;
-  late String post;
+  late String sessionID;
 
-  Login({String? wash, String? post}){
-    this.wash = wash!;
-    this.post = post!;
+  Login({String? sessionID}){
+    this.sessionID = sessionID!;
   }
 
   @override
-  State<Login> createState() => _LoginViewState(wash: this.wash, post: this.post);
+  State<Login> createState() => _LoginViewState(sessionID: this.sessionID);
 }
 
 class _LoginViewState extends State<Login> {
 
-  late String wash;
-  late String post;
+  late String sessionID;
   bool _isSigningIn = false;
 
-  _LoginViewState({String? wash, String? post}){
-    this.wash = wash!;
-    this.post = post!;
+  _LoginViewState({String? sessionID}){
+    this.sessionID = sessionID!;
   }
 
   @override
@@ -90,8 +86,6 @@ class _LoginViewState extends State<Login> {
                                     ),
                                     onPressed: () async {
                                       setState(() {
-                                        print("wash :" + wash);
-                                        print("post: " + post);
                                         _isSigningIn = true;
                                       });
 
@@ -106,7 +100,7 @@ class _LoginViewState extends State<Login> {
                                       });
 
                                       if (user != null) {
-                                        routemaster.push('/debit?wash='+wash+'&post='+post);
+                                        routemaster.push('/debit?sessionID='+sessionID);
                                       }
                                     },
                                     child: const Text("Войти", style:

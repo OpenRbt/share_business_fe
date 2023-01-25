@@ -10,29 +10,11 @@
 
 part of openapi.api;
 
-class Profile {
-  /// Returns a new [Profile] instance.
-  Profile({
-    this.id,
-    this.active,
+class GetBalance200Response {
+  /// Returns a new [GetBalance200Response] instance.
+  GetBalance200Response({
     this.balance,
   });
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? id;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? active;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -43,33 +25,19 @@ class Profile {
   int? balance;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Profile &&
-     other.id == id &&
-     other.active == active &&
+  bool operator ==(Object other) => identical(this, other) || other is GetBalance200Response &&
      other.balance == balance;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (active == null ? 0 : active!.hashCode) +
     (balance == null ? 0 : balance!.hashCode);
 
   @override
-  String toString() => 'Profile[id=$id, active=$active, balance=$balance]';
+  String toString() => 'GetBalance200Response[balance=$balance]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.id != null) {
-      json[r'id'] = this.id;
-    } else {
-      json[r'id'] = null;
-    }
-    if (this.active != null) {
-      json[r'active'] = this.active;
-    } else {
-      json[r'active'] = null;
-    }
     if (this.balance != null) {
       json[r'balance'] = this.balance;
     } else {
@@ -78,10 +46,10 @@ class Profile {
     return json;
   }
 
-  /// Returns a new [Profile] instance and imports its values from
+  /// Returns a new [GetBalance200Response] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static Profile? fromJson(dynamic value) {
+  static GetBalance200Response? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -90,26 +58,24 @@ class Profile {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "Profile[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "Profile[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "GetBalance200Response[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "GetBalance200Response[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return Profile(
-        id: mapValueOfType<String>(json, r'id'),
-        active: mapValueOfType<bool>(json, r'active'),
+      return GetBalance200Response(
         balance: mapValueOfType<int>(json, r'balance'),
       );
     }
     return null;
   }
 
-  static List<Profile>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <Profile>[];
+  static List<GetBalance200Response>? listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <GetBalance200Response>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = Profile.fromJson(row);
+        final value = GetBalance200Response.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -118,12 +84,12 @@ class Profile {
     return result.toList(growable: growable);
   }
 
-  static Map<String, Profile> mapFromJson(dynamic json) {
-    final map = <String, Profile>{};
+  static Map<String, GetBalance200Response> mapFromJson(dynamic json) {
+    final map = <String, GetBalance200Response>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = Profile.fromJson(entry.value);
+        final value = GetBalance200Response.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -132,13 +98,13 @@ class Profile {
     return map;
   }
 
-  // maps a json object with a list of Profile-objects as value to a dart map
-  static Map<String, List<Profile>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<Profile>>{};
+  // maps a json object with a list of GetBalance200Response-objects as value to a dart map
+  static Map<String, List<GetBalance200Response>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<GetBalance200Response>>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = Profile.listFromJson(entry.value, growable: growable,);
+        final value = GetBalance200Response.listFromJson(entry.value, growable: growable,);
         if (value != null) {
           map[entry.key] = value;
         }

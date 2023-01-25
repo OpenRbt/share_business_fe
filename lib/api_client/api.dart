@@ -31,11 +31,13 @@ part 'api/session_api.dart';
 part 'api/standard_api.dart';
 part 'api/user_api.dart';
 
+part 'model/bonus_charge.dart';
 part 'model/error.dart';
-part 'model/health_check200_response.dart';
+part 'model/get_balance200_response.dart';
+part 'model/get_health_check200_response.dart';
 part 'model/profile.dart';
 part 'model/session.dart';
-part 'model/session_post.dart';
+part 'model/wash_server.dart';
 
 
 const _delimiters = {'csv': ',', 'ssv': ' ', 'tsv': '\t', 'pipes': '|'};

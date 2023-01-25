@@ -21,8 +21,8 @@ class SessionApi {
   ///
   /// * [String] UID (required):
   ///
-  /// * [SessionPost] body:
-  Future<Response> postWithHttpInfo(String UID, { SessionPost? body, }) async {
+  /// * [BonusCharge] body:
+  Future<Response> chargeBonusWithHttpInfo(String UID, { BonusCharge? body, }) async {
     // ignore: prefer_const_declarations
     final path = r'/session/{UID}'
       .replaceAll('{UID}', UID);
@@ -52,27 +52,19 @@ class SessionApi {
   ///
   /// * [String] UID (required):
   ///
-  /// * [SessionPost] body:
-  Future<Profile?> post(String UID, { SessionPost? body, }) async {
-    final response = await postWithHttpInfo(UID,  body: body, );
+  /// * [BonusCharge] body:
+  Future<void> chargeBonus(String UID, { BonusCharge? body, }) async {
+    final response = await chargeBonusWithHttpInfo(UID,  body: body, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
-    // When a remote server returns no body with a status of 204, we shall not decode it.
-    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
-    // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Profile',) as Profile;
-    
-    }
-    return null;
   }
 
   /// Performs an HTTP 'GET /session/{UID}' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] UID (required):
-  Future<Response> sessionWithHttpInfo(String UID,) async {
+  Future<Response> getSessionWithHttpInfo(String UID,) async {
     // ignore: prefer_const_declarations
     final path = r'/session/{UID}'
       .replaceAll('{UID}', UID);
@@ -101,8 +93,8 @@ class SessionApi {
   /// Parameters:
   ///
   /// * [String] UID (required):
-  Future<Session?> session(String UID,) async {
-    final response = await sessionWithHttpInfo(UID,);
+  Future<Session?> getSession(String UID,) async {
+    final response = await getSessionWithHttpInfo(UID,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }

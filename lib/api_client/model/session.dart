@@ -13,9 +13,8 @@ part of openapi.api;
 class Session {
   /// Returns a new [Session] instance.
   Session({
-    this.washServerName,
-    this.post,
-    this.userBalance,
+    this.washServer,
+    this.postID,
     this.postBalance,
   });
 
@@ -25,7 +24,7 @@ class Session {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? washServerName;
+  WashServer? washServer;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -33,7 +32,7 @@ class Session {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? post;
+  int? postID;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -41,55 +40,40 @@ class Session {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? userBalance;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? postBalance;
+  int? postBalance;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is Session &&
-     other.washServerName == washServerName &&
-     other.post == post &&
-     other.userBalance == userBalance &&
+     other.washServer == washServer &&
+     other.postID == postID &&
      other.postBalance == postBalance;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (washServerName == null ? 0 : washServerName!.hashCode) +
-    (post == null ? 0 : post!.hashCode) +
-    (userBalance == null ? 0 : userBalance!.hashCode) +
+    (washServer == null ? 0 : washServer!.hashCode) +
+    (postID == null ? 0 : postID!.hashCode) +
     (postBalance == null ? 0 : postBalance!.hashCode);
 
   @override
-  String toString() => 'Session[washServerName=$washServerName, post=$post, userBalance=$userBalance, postBalance=$postBalance]';
+  String toString() => 'Session[washServer=$washServer, postID=$postID, postBalance=$postBalance]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.washServerName != null) {
-      json[r'WashServerName'] = this.washServerName;
+    if (this.washServer != null) {
+      json[r'washServer'] = this.washServer;
     } else {
-      json[r'WashServerName'] = null;
+      json[r'washServer'] = null;
     }
-    if (this.post != null) {
-      json[r'post'] = this.post;
+    if (this.postID != null) {
+      json[r'postID'] = this.postID;
     } else {
-      json[r'post'] = null;
-    }
-    if (this.userBalance != null) {
-      json[r'UserBalance'] = this.userBalance;
-    } else {
-      json[r'UserBalance'] = null;
+      json[r'postID'] = null;
     }
     if (this.postBalance != null) {
-      json[r'PostBalance'] = this.postBalance;
+      json[r'postBalance'] = this.postBalance;
     } else {
-      json[r'PostBalance'] = null;
+      json[r'postBalance'] = null;
     }
     return json;
   }
@@ -113,10 +97,9 @@ class Session {
       }());
 
       return Session(
-        washServerName: mapValueOfType<String>(json, r'WashServerName'),
-        post: mapValueOfType<String>(json, r'post'),
-        userBalance: mapValueOfType<String>(json, r'UserBalance'),
-        postBalance: mapValueOfType<String>(json, r'PostBalance'),
+        washServer: WashServer.fromJson(json[r'washServer']),
+        postID: mapValueOfType<int>(json, r'postID'),
+        postBalance: mapValueOfType<int>(json, r'postBalance'),
       );
     }
     return null;
