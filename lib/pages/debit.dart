@@ -67,10 +67,6 @@ class _DebitState extends State<Debit> {
     _profileRefresh = Timer(const Duration(seconds: 1), _refreshSession);
   }
 
-  Future sendBonuses() async {
-    await Common.sessionApi!.chargeBonus(sessionID, body: BonusCharge(amount: bonus));
-  }
-
   @override
   Widget build(BuildContext context) {
     return user != null ? Scaffold(
@@ -326,7 +322,10 @@ class _DebitState extends State<Debit> {
                                     )
                                 )
                             ),
-                            onPressed: () => {sendBonuses()},
+                            onPressed: () async {
+                          log("bonus: " + bonus.toString());
+                          Common.sessionApi!.postSession(sessionID, body: BonusCharge(amount: bonus));
+                          },
                             child: Text("Подтвердить", style: TextStyle(
                               fontSize: 18,
                               fontFamily: 'RobotoCondensed',
