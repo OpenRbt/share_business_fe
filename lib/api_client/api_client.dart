@@ -187,8 +187,8 @@ class ApiClient {
           return Error.fromJson(value);
         case 'GetBalance200Response':
           return GetBalance200Response.fromJson(value);
-        case 'GetHealthCheck200Response':
-          return GetHealthCheck200Response.fromJson(value);
+        case 'HealthCheck200Response':
+          return HealthCheck200Response.fromJson(value);
         case 'Profile':
           return Profile.fromJson(value);
         case 'Session':

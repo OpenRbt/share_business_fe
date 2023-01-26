@@ -16,50 +16,6 @@ class SessionApi {
 
   final ApiClient apiClient;
 
-  /// Performs an HTTP 'POST /session/{UID}' operation and returns the [Response].
-  /// Parameters:
-  ///
-  /// * [String] UID (required):
-  ///
-  /// * [BonusCharge] body:
-  Future<Response> chargeBonusWithHttpInfo(String UID, { BonusCharge? body, }) async {
-    // ignore: prefer_const_declarations
-    final path = r'/session/{UID}'
-      .replaceAll('{UID}', UID);
-
-    // ignore: prefer_final_locals
-    Object? postBody = body;
-
-    final queryParams = <QueryParam>[];
-    final headerParams = <String, String>{};
-    final formParams = <String, String>{};
-
-    const contentTypes = <String>['application/json'];
-
-
-    return apiClient.invokeAPI(
-      path,
-      'POST',
-      queryParams,
-      postBody,
-      headerParams,
-      formParams,
-      contentTypes.isEmpty ? null : contentTypes.first,
-    );
-  }
-
-  /// Parameters:
-  ///
-  /// * [String] UID (required):
-  ///
-  /// * [BonusCharge] body:
-  Future<void> chargeBonus(String UID, { BonusCharge? body, }) async {
-    final response = await chargeBonusWithHttpInfo(UID,  body: body, );
-    if (response.statusCode >= HttpStatus.badRequest) {
-      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
-    }
-  }
-
   /// Performs an HTTP 'GET /session/{UID}' operation and returns the [Response].
   /// Parameters:
   ///
@@ -106,5 +62,49 @@ class SessionApi {
     
     }
     return null;
+  }
+
+  /// Performs an HTTP 'POST /session/{UID}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] UID (required):
+  ///
+  /// * [BonusCharge] body:
+  Future<Response> postSessionWithHttpInfo(String UID, { BonusCharge? body, }) async {
+    // ignore: prefer_const_declarations
+    final path = r'/session/{UID}'
+      .replaceAll('{UID}', UID);
+
+    // ignore: prefer_final_locals
+    Object? postBody = body;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>['application/json'];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'POST',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] UID (required):
+  ///
+  /// * [BonusCharge] body:
+  Future<void> postSession(String UID, { BonusCharge? body, }) async {
+    final response = await postSessionWithHttpInfo(UID,  body: body, );
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
   }
 }
