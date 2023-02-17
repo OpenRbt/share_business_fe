@@ -17,30 +17,41 @@ final URL = "";
 //user/get
 
 class Debit extends StatefulWidget {
-  late String sessionID;
 
-  Debit({String? sessionID}){
-    this.sessionID = sessionID!;
+  late String? sessionID;
+  late String? washName;
+  late String? postID;
+
+  Debit({String? sessionID, String? washName, String? postID}){
+    this.sessionID = sessionID;
+    this.washName = washName;
+    this.postID = postID;
   }
 
   @override
-  State<Debit> createState() => _DebitState(sessionID: this.sessionID);
+  State<Debit> createState() => _DebitState(sessionID: this.sessionID, washName: this.washName, postID: this.postID);
 }
 
 class _DebitState extends State<Debit> {
 
-  late String sessionID;
+  late String? sessionID;
+  String? washName;
+  String? postID;
 
-  _DebitState({String? sessionID}){
-    this.sessionID = sessionID!;
+  _DebitState({String? sessionID, String? washName, String? postID}){
+    this.sessionID = sessionID;
+    this.washName = washName;
+    this.postID = postID;
   }
+
+  //final ValueNotifier<String> _washId = ValueNotifier(this.washName.toString());
+  //final ValueNotifier<String> _postId = ValueNotifier("Loading...");
 
   var txt = TextEditingController();
   late Timer _everySecond;
   User? user = FirebaseAuth.instance.currentUser;
 
-  final ValueNotifier<String> _washId = ValueNotifier("Loading...");
-  final ValueNotifier<String> _postId = ValueNotifier("Loading...");
+
   final ValueNotifier<int> _washBalance = ValueNotifier(0);
   late Timer _profileRefresh;
 
@@ -51,9 +62,9 @@ class _DebitState extends State<Debit> {
   }
 
   Future<void> _refreshSession() async {
-    Session? session = await Common.sessionApi!.getSession(sessionID);
-      _washId.value = session?.postID.toString() ?? "";
-      _postId.value = session?.postID.toString() ?? "";
+    Session? session = await Common.sessionApi!.getSession(sessionID!);
+      //_washId.value = session?.postID.toString() ?? "";
+      //_postId.value = session?.postID.toString() ?? "";
       _washBalance.value = session?.postBalance ?? 0;
    }
 
@@ -69,8 +80,8 @@ class _DebitState extends State<Debit> {
 
   @override
   Widget build(BuildContext context) {
-    return user != null ? Scaffold(
-        drawer: SideMenu(sessionID: this.sessionID),
+    return user != null && sessionID != null && washName != null && postID != null ? Scaffold(
+        drawer: SideMenu(sessionID: this.sessionID, washName: this.washName, postID: this.postID),
           appBar: AppBar(
             title: Image.asset(
               "assets/wash_logo.png",
@@ -92,13 +103,13 @@ class _DebitState extends State<Debit> {
                     child: Column(
                       children: [
                         SizedBox(height: 50),
-                        Text("Мойка: " + _washId.value, style: TextStyle(
+                        Text("Мойка: " + washName.toString(), style: TextStyle(
                           fontSize: 30,
                           fontFamily: 'Roboto',
                           color: Colors.black,
                         )),
                         SizedBox(height: 10),
-                        Text("Пост: " + _postId.value, style: TextStyle(
+                        Text("Пост: " + postID.toString(), style: TextStyle(
                           fontSize: 24,
                           fontFamily: 'Roboto',
                           color: Colors.black,
@@ -324,7 +335,7 @@ class _DebitState extends State<Debit> {
                             ),
                             onPressed: () async {
                           log("bonus: " + bonus.toString());
-                          Common.sessionApi!.postSession(sessionID, body: BonusCharge(amount: bonus));
+                          Common.sessionApi!.postSession(sessionID!, body: BonusCharge(amount: bonus));
                           },
                             child: Text("Подтвердить", style: TextStyle(
                               fontSize: 18,
@@ -342,7 +353,9 @@ class _DebitState extends State<Debit> {
           )
         )
     ) :
-        Container();
+        Container(
+          child: Text('Bad Request'),
+        );
   }
 
 }

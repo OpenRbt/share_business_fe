@@ -8,28 +8,36 @@ import '../main.dart';
 import '../service/authentication.dart';
 
 class Login extends StatefulWidget {
-  late String sessionID;
+  late String? sessionID;
+  late String? washName;
+  late String? postID;
 
-  Login({String? sessionID}){
-    this.sessionID = sessionID!;
+  Login({String? sessionID, String? washName, String? postID} ){
+    this.sessionID = sessionID;
+    this.washName = washName;
+    this.postID = postID;
   }
 
   @override
-  State<Login> createState() => _LoginViewState(sessionID: this.sessionID);
+  State<Login> createState() => _LoginViewState(sessionID: this.sessionID, washName: this.washName, postID: this.postID);
 }
 
 class _LoginViewState extends State<Login> {
 
-  late String sessionID;
+  late String? sessionID;
+  late String? washName;
+  late String? postID;
   bool _isSigningIn = false;
 
-  _LoginViewState({String? sessionID}){
-    this.sessionID = sessionID!;
+  _LoginViewState({String? sessionID, String? washName, String? postID} ){
+    this.sessionID = sessionID;
+    this.washName = washName;
+    this.postID = postID;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return sessionID != null && washName != null && postID != null ? Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: AppBar(
@@ -100,7 +108,7 @@ class _LoginViewState extends State<Login> {
                                       });
 
                                       if (user != null) {
-                                        routemaster.push('/debit?sessionID='+sessionID);
+                                        routemaster.push('/debit?sessionID='+sessionID!+'&washName='+washName!+'&postID='+postID!);
                                       }
                                     },
                                     child: const Text("Войти", style:
@@ -149,6 +157,9 @@ class _LoginViewState extends State<Login> {
           ),
         )
       )
+    ):
+    Container(
+      child: Text('Bad Request'),
     );
   }
 }
