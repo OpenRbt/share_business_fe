@@ -11,8 +11,8 @@ import 'package:share_buisness_front_end/utils/common.dart';
 
 final routes = RouteMap(
     routes: {
-      '/': (route) => MaterialPage(child: Login(sessionID: route.queryParameters['sessionID'])),
-      '/debit': (route) => MaterialPage(child: Debit(sessionID: route.queryParameters['sessionID'])),
+      '/': (route) => MaterialPage(child: Login(sessionID: route.queryParameters['sessionID'], washName: route.queryParameters['washName'], postID: route.queryParameters['postID'])),
+      '/debit': (route) => MaterialPage(child: Debit(sessionID: route.queryParameters['sessionID'], washName: route.queryParameters['washName'], postID: route.queryParameters['postID'])),
       '/profile': (route) => MaterialPage(child: ProfilePage(sessionID: route.queryParameters['sessionID'])),
     }
 );

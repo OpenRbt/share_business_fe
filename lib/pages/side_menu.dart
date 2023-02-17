@@ -7,26 +7,35 @@ import '../service/authentication.dart';
 
 class SideMenu extends StatefulWidget {
 
-  late String sessionID;
+  late String? sessionID;
+  late String? washName;
+  late String? postID;
 
   final User? user = FirebaseAuth.instance.currentUser;
-  SideMenu({String? sessionID}){
-    this.sessionID = sessionID!;
+
+  SideMenu({String? sessionID, String? washName, String? postID}){
+    this.sessionID = sessionID;
+    this.washName = washName;
+    this.postID = postID;
   }
 
   @override
-  State<SideMenu> createState() => _SideMenuState(this.user, this.sessionID);
+  State<SideMenu> createState() => _SideMenuState(this.user, this.sessionID, this.washName, this.postID);
 }
 
 class _SideMenuState extends State<SideMenu> {
 
-  late String sessionID;
+  late String? sessionID;
+  late String? washName;
+  late String? postID;
   late User? user;
   bool _isSigningOut = false;
 
-  _SideMenuState(User? user, String? sessionID){
+  _SideMenuState(User? user, String? sessionID, String? washName, String? postID){
     this.user = user;
-    this.sessionID = sessionID!;
+    this.sessionID = sessionID;
+    this.washName = washName;
+    this.postID = postID;
   }
 
   @override
@@ -63,7 +72,7 @@ class _SideMenuState extends State<SideMenu> {
                         )
                     )
                 ),
-                onPressed: () {routemaster.push('/profile?sessionID='+this.sessionID);},
+                onPressed: () {routemaster.push('/profile?sessionID='+sessionID!+'&washName='+washName!+'&postID='+postID!);},
                 child: Text('Перейти в профиль',
                   style: TextStyle(
                     fontSize: 30,

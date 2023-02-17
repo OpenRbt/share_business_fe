@@ -8,19 +8,25 @@ import 'package:share_buisness_front_end/utils/common.dart';
 
 class ProfilePage extends StatefulWidget {
 
-  late String sessionID;
+  late String? sessionID;
+  late String? washName;
+  late String? postID;
 
-  ProfilePage({String? sessionID}){
-    this.sessionID = sessionID!;
+  ProfilePage({String? sessionID, String? washName, String? postID}){
+    this.sessionID = sessionID;
+    this.washName = washName;
+    this.postID = postID;
   }
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState(sessionID: this.sessionID);
+  State<ProfilePage> createState() => _ProfilePageState(sessionID: this.sessionID, washName: this.washName, postID: this.postID);
 }
 
 class _ProfilePageState extends State<ProfilePage> {
 
-  late String sessionID;
+  late String? sessionID;
+  late String? washName;
+  late String? postID;
   User? user = FirebaseAuth.instance.currentUser;
   bool _isSigningIn = false;
 
@@ -28,8 +34,10 @@ class _ProfilePageState extends State<ProfilePage> {
   final ValueNotifier<String> _balance = ValueNotifier("Loading...");
   late Timer _profileRefresh;
 
-  _ProfilePageState({String? sessionID}){
-    this.sessionID = sessionID!;
+  _ProfilePageState({String? sessionID, String? washName, String? postID}){
+    this.sessionID = sessionID;
+    this.washName = washName;
+    this.postID = postID;
   }
 
   @override
@@ -68,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
             foregroundColor: Colors.black,
           ),
 
-        drawer: SideMenu(sessionID: this.sessionID),
+        drawer: SideMenu(sessionID: this.sessionID, washName: this.washName, postID: this.postID),
         backgroundColor: Colors.white,
         body: SafeArea(
               child: Center(
