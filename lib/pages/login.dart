@@ -1,43 +1,69 @@
+import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:float_column/float_column.dart';
 
+import '../api_client/api.dart';
 import '../main.dart';
-import '../service/authentication.dart';
+import '../service/authentication.dart' as Auth;
+import '../utils/common.dart';
 
 class Login extends StatefulWidget {
   late String? sessionID;
-  late String? washName;
-  late String? postID;
 
-  Login({String? sessionID, String? washName, String? postID} ){
+  Login({String? sessionID} ){
     this.sessionID = sessionID;
-    this.washName = washName;
-    this.postID = postID;
   }
 
   @override
-  State<Login> createState() => _LoginViewState(sessionID: this.sessionID, washName: this.washName, postID: this.postID);
+  State<Login> createState() => _LoginViewState(sessionID: this.sessionID);
 }
 
 class _LoginViewState extends State<Login> {
 
   late String? sessionID;
-  late String? washName;
-  late String? postID;
   bool _isSigningIn = false;
 
-  _LoginViewState({String? sessionID, String? washName, String? postID} ){
+  _LoginViewState({String? sessionID} ){
     this.sessionID = sessionID;
-    this.washName = washName;
-    this.postID = postID;
+  }
+
+  late Timer _profileRefresh;
+
+  final ValueNotifier<String> _washId = ValueNotifier("...");
+  final ValueNotifier<String> _postId = ValueNotifier("...");
+
+  Future<Session?> _refreshSession() async {
+    if(sessionID != null){
+      try{
+        Future<Session?> session = Common.sessionApi!.getSession(sessionID!);
+        return session;
+      } on HttpException catch(e){
+        print("HttpException");
+      } catch(e){
+        print("OtherException");
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _profileRefresh = Timer(const Duration(seconds: 1), _refreshSession);
+  }
+
+  @override
+  void dispose() {
+    _profileRefresh.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return sessionID != null && washName != null && postID != null ? Scaffold(
+    return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: AppBar(
@@ -54,112 +80,264 @@ class _LoginViewState extends State<Login> {
           ),
         ),
         backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              FutureBuilder(
-                future: Authentication.initializeFirebase(context: context),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  } else if (snapshot.connectionState == ConnectionState.done) {
-                    return Expanded(
-                      child: Center(
-                        child: _isSigningIn
-                            ? Column(
-                          children: const [
-                            SizedBox(height: 300,),
-                            CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                            ),
-                          ],
-                        )
-                            : SizedBox(
-                            height: 150,
-                            width: 300,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                  width: 300,
-                                  child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromRGBO(227,1,15, 1)),
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(1),
-                                            )
-                                        )
+      body: sessionID != null ?
+      FutureBuilder<Session?>(
+        future: _refreshSession(),
+        builder: (BuildContext context, AsyncSnapshot<Session?> snapshot) {
+          if (snapshot.hasData){
+            //snapshot.data.postID
+            return SafeArea(
+                child: Center(
+                  child: Column(
+                    children: [
+                      FutureBuilder(
+                        future: Auth.Authentication.initializeFirebase(context: context),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          } else if (snapshot.connectionState == ConnectionState.done) {
+                            return Expanded(
+                              child: Center(
+                                child: _isSigningIn
+                                    ? Column(
+                                  children: const [
+                                    SizedBox(height: 300,),
+                                    CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                                     ),
-                                    onPressed: () async {
-                                      setState(() {
-                                        _isSigningIn = true;
-                                      });
+                                  ],
+                                )
+                                    : SizedBox(
+                                    height: 150,
+                                    width: 300,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 50,
+                                          width: 300,
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromRGBO(227,1,15, 1)),
+                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(1),
+                                                    )
+                                                )
+                                            ),
+                                            onPressed: () async {
+                                              setState(() {
+                                                _isSigningIn = true;
+                                              });
 
-                                      User? user =
-                                      await Authentication.signInWithGoogle(context: context);
+                                              User? user =
+                                              await Auth.Authentication.signInWithGoogle(context: context);
 
-                                      final idToken = await user!.getIdToken();
-                                      print(idToken);
+                                              final idToken = await user!.getIdToken();
+                                              print(idToken);
 
-                                      setState(() {
-                                        _isSigningIn = false;
-                                      });
+                                              setState(() {
+                                                _isSigningIn = false;
+                                              });
 
-                                      if (user != null) {
-                                        routemaster.push('/debit?sessionID='+sessionID!+'&washName='+washName!+'&postID='+postID!);
-                                      }
-                                    },
-                                    child: const Text("Войти", style:
-                                    TextStyle(
+                                              if (user != null) {
+                                                if(sessionID != null){
+                                                  routemaster.push('/debit?sessionID='+sessionID!);
+                                                }
+                                                else{
+                                                  routemaster.push('/profile');
+                                                }
+                                              }
+                                            },
+                                            child: const Text("Войти", style:
+                                            TextStyle(
+                                              fontSize: 22,
+                                              fontFamily: 'RobotoCondensed',
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                                'Вход с  ',
+                                                style: TextStyle(
+                                                  fontSize: 22,
+                                                  fontFamily: 'RobotoCondensed',
+                                                  fontWeight: FontWeight.w400,
+                                                )
+                                            ),
+                                            Image.asset(
+                                              'google_logo.png',
+                                              height: 50,
+                                              width: 50,
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                ),
+                              ),
+                            );
+                          }
+                          return const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.orange,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )
+            );
+          }
+          else if(snapshot.hasError){
+            return Container(
+              child: Text("Wrong parametrs", style: TextStyle(
+                fontSize: 30,
+                fontFamily: 'Roboto',
+                color: Colors.black,
+                decoration: TextDecoration.none,
+              )),
+            );
+          }
+          return Column(
+            children: [
+              SizedBox(
+                height: 300.0,
+              ),
+              Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Colors.black,
+                  ),
+                ),
+              )
+            ],
+          );
+        },
+      ):
+      SafeArea(
+          child: Center(
+            child: Column(
+              children: [
+                FutureBuilder(
+                  future: Auth.Authentication.initializeFirebase(context: context),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    } else if (snapshot.connectionState == ConnectionState.done) {
+                      return Expanded(
+                        child: Center(
+                          child: _isSigningIn
+                              ? Column(
+                            children: const [
+                              SizedBox(height: 300,),
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                              ),
+                            ],
+                          )
+                              : SizedBox(
+                              height: 150,
+                              width: 300,
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 50,
+                                    width: 300,
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                          backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromRGBO(227,1,15, 1)),
+                                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(1),
+                                              )
+                                          )
+                                      ),
+                                      onPressed: () async {
+                                        setState(() {
+                                          _isSigningIn = true;
+                                        });
+
+                                        User? user =
+                                        await Auth.Authentication.signInWithGoogle(context: context);
+
+                                        final idToken = await user!.getIdToken();
+                                        print(idToken);
+
+                                        setState(() {
+                                          _isSigningIn = false;
+                                        });
+
+                                        if (user != null) {
+                                          if(sessionID != null){
+                                            routemaster.push('/debit?sessionID='+sessionID!);
+                                          }
+                                          else{
+                                            routemaster.push('/profile');
+                                          }
+                                        }
+                                      },
+                                      child: const Text("Войти", style:
+                                      TextStyle(
                                         fontSize: 22,
                                         fontFamily: 'RobotoCondensed',
                                         color: Colors.white,
                                         fontWeight: FontWeight.w700,
-                                    ),
+                                      ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 20,),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                        'Вход с  ',
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          fontFamily: 'RobotoCondensed',
-                                          fontWeight: FontWeight.w400,
-                                        )
-                                    ),
-                                    Image.asset(
-                                      'google_logo.png',
-                                      height: 50,
-                                      width: 50,
-                                    )
-                                  ],
-                                )
-                              ],
-                            )
+                                  const SizedBox(height: 20,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                          'Вход с  ',
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontFamily: 'RobotoCondensed',
+                                            fontWeight: FontWeight.w400,
+                                          )
+                                      ),
+                                      Image.asset(
+                                        'google_logo.png',
+                                        height: 50,
+                                        width: 50,
+                                      )
+                                    ],
+                                  )
+                                ],
+                              )
+                          ),
                         ),
-                      ),
+                      );
+                    }
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 300.0,
+                        ),
+                        Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.black,
+                            ),
+                          ),
+                        )
+                      ],
                     );
-                  }
-                  return const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.orange,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        )
+                  },
+                ),
+              ],
+            ),
+          )
       )
-    ):
-    Container(
-      child: Text('Bad Request'),
     );
   }
 }
