@@ -6,13 +6,12 @@ import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/debit.dart';
 import 'package:share_buisness_front_end/pages/login.dart';
 import 'package:share_buisness_front_end/pages/profile.dart';
-import 'package:share_buisness_front_end/pages/side_menu.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
 
 final routes = RouteMap(
     routes: {
-      '/': (route) => MaterialPage(child: Login(sessionID: route.queryParameters['sessionID'], washName: route.queryParameters['washName'], postID: route.queryParameters['postID'])),
-      '/debit': (route) => MaterialPage(child: Debit(sessionID: route.queryParameters['sessionID'], washName: route.queryParameters['washName'], postID: route.queryParameters['postID'])),
+      '/': (route) => MaterialPage(child: Login(sessionID: route.queryParameters['sessionID'])),
+      '/debit': (route) => MaterialPage(child: Debit(sessionID: route.queryParameters['sessionID'])),
       '/profile': (route) => MaterialPage(child: ProfilePage(sessionID: route.queryParameters['sessionID'])),
     }
 );
