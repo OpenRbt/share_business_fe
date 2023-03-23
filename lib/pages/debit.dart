@@ -58,6 +58,7 @@ class _DebitState extends State<Debit> {
     if(sessionID != null){
       try{
         Future<Session?> session = Common.sessionApi!.getSession(sessionID!);
+        //balanceResponse.
         return session;
       } on HttpException catch(e){
         print("HttpException");
@@ -67,12 +68,14 @@ class _DebitState extends State<Debit> {
     }
   }
 
-  late var bonus = 0;
+  late var bonus;
   late var _currentSliderValue = bonus;
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
+    GetBalance200Response? balanceResponse = await Common.userApi!.getBalance();
+    bonus = balanceResponse!.balance!;
     txt.text = bonus.toString();
     _profileRefresh = Timer(const Duration(seconds: 1), _refreshSession);
   }
@@ -100,7 +103,6 @@ class _DebitState extends State<Debit> {
           future: _refreshSession(),
           builder: (BuildContext context, AsyncSnapshot<Session?> snapshot){
             if (snapshot.hasData) {
-              bonus = snapshot.data!.postBalance!;
               _currentSliderValue = bonus;
               return SafeArea(
                   child: Container(

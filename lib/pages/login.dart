@@ -141,6 +141,7 @@ class _LoginViewState extends State<Login> {
 
                                               if (user != null) {
                                                 if(sessionID != null){
+                                                  Common.sessionApi!.assignUserToSession(sessionID!);
                                                   routemaster.push('/debit?sessionID='+sessionID!);
                                                 }
                                                 else{
