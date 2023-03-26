@@ -124,7 +124,6 @@ class _LoginViewState extends State<Login> {
                                               await Auth.Authentication.signInWithGoogle(context: context);
 
                                               final idToken = await user!.getIdToken();
-                                              print(idToken);
 
                                               setState(() {
                                                 _isSigningIn = false;
@@ -233,7 +232,6 @@ class _LoginViewState extends State<Login> {
                                         await Auth.Authentication.signInWithGoogle(context: context);
 
                                         final idToken = await user!.getIdToken();
-                                        print(idToken);
 
                                         setState(() {
                                           _isSigningIn = false;
