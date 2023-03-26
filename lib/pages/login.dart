@@ -31,8 +31,6 @@ class _LoginViewState extends State<Login> {
     this.sessionID = sessionID;
   }
 
-  late Timer _profileRefresh;
-
   final ValueNotifier<String> _washId = ValueNotifier("...");
   final ValueNotifier<String> _postId = ValueNotifier("...");
 
@@ -52,12 +50,10 @@ class _LoginViewState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _profileRefresh = Timer(const Duration(seconds: 1), _refreshSession);
   }
 
   @override
   void dispose() {
-    _profileRefresh.cancel();
     super.dispose();
   }
 
@@ -81,12 +77,7 @@ class _LoginViewState extends State<Login> {
         ),
         backgroundColor: Colors.white,
       body: sessionID != null ?
-      FutureBuilder<Session?>(
-        future: _refreshSession(),
-        builder: (BuildContext context, AsyncSnapshot<Session?> snapshot) {
-          if (snapshot.hasData){
-            //snapshot.data.postID
-            return SafeArea(
+            SafeArea(
                 child: Center(
                   child: Column(
                     children: [
@@ -194,34 +185,7 @@ class _LoginViewState extends State<Login> {
                     ],
                   ),
                 )
-            );
-          }
-          else if(snapshot.hasError){
-            return Container(
-              child: Text("Wrong parametrs", style: TextStyle(
-                fontSize: 30,
-                fontFamily: 'Roboto',
-                color: Colors.black,
-                decoration: TextDecoration.none,
-              )),
-            );
-          }
-          return Column(
-            children: [
-              SizedBox(
-                height: 300.0,
-              ),
-              Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.black,
-                  ),
-                ),
-              )
-            ],
-          );
-        },
-      ):
+            ):
       SafeArea(
           child: Center(
             child: Column(
@@ -276,12 +240,7 @@ class _LoginViewState extends State<Login> {
                                         });
 
                                         if (user != null) {
-                                          if(sessionID != null){
-                                            routemaster.push('/debit?sessionID='+sessionID!);
-                                          }
-                                          else{
-                                            routemaster.push('/profile');
-                                          }
+                                          routemaster.push('/profile');
                                         }
                                       },
                                       child: const Text("Войти", style:

@@ -121,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Row(
                             children: [
                               Text(
-                                'Баланс ' + snapshot.data!.balance.toString(),
+                                'Баланс ' + (snapshot.data?.balance.toString() ?? "0"),
                                 style: TextStyle(
                                   fontSize: 40,
                                   fontFamily: 'RobotoCondensed',
