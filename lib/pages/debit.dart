@@ -45,7 +45,7 @@ class _DebitState extends State<Debit> {
   User? user = FirebaseAuth.instance.currentUser;
 
 
-  final ValueNotifier<int> _washBalance = ValueNotifier(0);
+  //final ValueNotifier<int> _washBalance = ValueNotifier(0);
   //late Timer _profileRefresh;
 
   @override
@@ -70,7 +70,7 @@ class _DebitState extends State<Debit> {
 
   late var bonusBalance;
   late var bonus;
-  late var _currentSliderValue = bonus;
+  late var _currentSliderValue;
 
   @override
   void initState() async {
@@ -78,6 +78,7 @@ class _DebitState extends State<Debit> {
     GetBalance200Response? balanceResponse = await Common.userApi!.getBalance();
     bonusBalance = (balanceResponse?.balance ?? 0);
     bonus = bonusBalance;
+    _currentSliderValue = bonus;
     txt.text = bonus.toString();
     //_profileRefresh = Timer(const Duration(seconds: 1), _refreshSession);
   }
@@ -105,7 +106,6 @@ class _DebitState extends State<Debit> {
           future: _refreshSession(),
           builder: (BuildContext context, AsyncSnapshot<Session?> snapshot){
             if (snapshot.hasData) {
-              _currentSliderValue = bonus;
               return SafeArea(
                   child: Container(
                     child: Column(
@@ -174,7 +174,7 @@ class _DebitState extends State<Debit> {
                                   bonus = 0;
                                 });
                               }
-                              else if(int.parse(text) > 0 && int.parse(text) < _washBalance.value){
+                              else if(int.parse(text) > 0 && int.parse(text) <= bonusBalance){
                                 setState(() {
                                   _currentSliderValue = int.parse(txt.text);
                                   bonus = _currentSliderValue;
@@ -254,8 +254,8 @@ class _DebitState extends State<Debit> {
                                 ),
                                 child: Slider(
                                   value: _currentSliderValue.toDouble(),
-                                  max: _washBalance.value.toDouble(),
-                                  divisions: _washBalance.value == 0 ? (_washBalance.value+1).toInt(): _washBalance.value.toInt(),
+                                  max: bonusBalance.toDouble(),
+                                  divisions: bonusBalance == 0 ? 1: bonusBalance,
                                   label: _currentSliderValue.round().toString(),
                                   onChanged: (double value) {
                                     setState(() {
@@ -279,7 +279,7 @@ class _DebitState extends State<Debit> {
                                     )
                                 ),
                                 onPressed: ()  {
-                                  if(bonus < _washBalance.value){
+                                  if(bonus < bonusBalance){
                                     setState(() {
                                       bonus++;
                                       _currentSliderValue = bonus;
@@ -344,8 +344,8 @@ class _DebitState extends State<Debit> {
                                             )
                                         )
                                     ),
-                                    onPressed: () async {
-                                      log("bonus: " + bonus.toString());
+                                    onPressed: () {
+                                      print("bonus: " + bonus.toString());
                                       Common.sessionApi!.postSession(sessionID!, body: BonusCharge(amount: bonus));
                                     },
                                     child: Text("Подтвердить", style: TextStyle(
