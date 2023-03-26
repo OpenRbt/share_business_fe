@@ -46,11 +46,11 @@ class _DebitState extends State<Debit> {
 
 
   final ValueNotifier<int> _washBalance = ValueNotifier(0);
-  late Timer _profileRefresh;
+  //late Timer _profileRefresh;
 
   @override
   void dispose() {
-    _profileRefresh.cancel();
+    //_profileRefresh.cancel();
     super.dispose();
   }
 
@@ -68,6 +68,7 @@ class _DebitState extends State<Debit> {
     }
   }
 
+  late var bonusBalance;
   late var bonus;
   late var _currentSliderValue = bonus;
 
@@ -75,9 +76,10 @@ class _DebitState extends State<Debit> {
   void initState() async {
     super.initState();
     GetBalance200Response? balanceResponse = await Common.userApi!.getBalance();
-    bonus = balanceResponse!.balance!;
+    bonusBalance = (balanceResponse?.balance ?? 0);
+    bonus = bonusBalance;
     txt.text = bonus.toString();
-    _profileRefresh = Timer(const Duration(seconds: 1), _refreshSession);
+    //_profileRefresh = Timer(const Duration(seconds: 1), _refreshSession);
   }
 
   @override
@@ -112,13 +114,13 @@ class _DebitState extends State<Debit> {
                             child: Column(
                               children: [
                                 SizedBox(height: 50),
-                                Text("Мойка: " + snapshot.data!.postID.toString(), style: TextStyle(
+                                Text("Мойка: " + (snapshot.data?.postID.toString() ?? ""), style: TextStyle(
                                   fontSize: 30,
                                   fontFamily: 'Roboto',
                                   color: Colors.black,
                                 )),
                                 SizedBox(height: 10),
-                                Text("Пост: " + snapshot.data!.postID.toString(), style: TextStyle(
+                                Text("Пост: " + (snapshot.data?.postID.toString() ?? ""), style: TextStyle(
                                   fontSize: 24,
                                   fontFamily: 'Roboto',
                                   color: Colors.black,
@@ -134,12 +136,12 @@ class _DebitState extends State<Debit> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 30),
-                              Text("Баланс бонусов: " + snapshot.data!.postBalance.toString(), style: TextStyle(
+                              Text("Баланс бонусов: " + bonusBalance.toString(), style: TextStyle(
                                 fontSize: 18,
                                 fontFamily: 'Roboto',
                                 color: Colors.black,)),
                               SizedBox(height: 10),
-                              Text("Будет начислено бонусов: " + snapshot.data!.postBalance.toString(), style: TextStyle(
+                              Text("Будет начислено бонусов: " + _currentSliderValue.toString(), style: TextStyle(
                                 fontSize: 18,
                                 fontFamily: 'Roboto',
                                 color: Colors.black,)),

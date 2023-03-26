@@ -34,8 +34,8 @@ void main() async {
     ),
   );
 
-  Common.userApi = UserApi(ApiClient(basePath: 'http://localhost:8080', authentication: HttpBearerAuth()));
-  Common.sessionApi = SessionApi(ApiClient(basePath: 'http://localhost:8080', authentication: HttpBearerAuth()));
+  Common.userApi = UserApi(ApiClient(basePath: 'http://app.openwashing.com:8071', authentication: HttpBearerAuth()));
+  Common.sessionApi = SessionApi(ApiClient(basePath: 'http://app.openwashing.com:8071', authentication: HttpBearerAuth()));
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       routemaster.popUntil((RouteData data) {
