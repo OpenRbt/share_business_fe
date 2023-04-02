@@ -12,7 +12,7 @@ import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/side_menu.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
 
-import '../main.dart';
+import '../service/authentication.dart' as Auth;
 
 final URL = "";
 //user/get
@@ -141,10 +141,12 @@ class _DebitState extends State<Debit> {
                                 fontFamily: 'Roboto',
                                 color: Colors.black,)),
                               SizedBox(height: 10),
+                              /*
                               Text("Будет начислено бонусов: " + _currentSliderValue.toString(), style: TextStyle(
                                 fontSize: 18,
                                 fontFamily: 'Roboto',
                                 color: Colors.black,)),
+                               */
                             ],
                           ),
                         ),
@@ -320,8 +322,11 @@ class _DebitState extends State<Debit> {
                                             )
                                         )
                                     ),
-                                    onPressed: () => {},
-                                    child: Text("Отмена", style: TextStyle(
+                                    onPressed: () async {
+                                      await Auth.Authentication.signOut(context: context);
+                                      //routemaster.push('/');
+                                    },
+                                    child: Text("Выход", style: TextStyle(
                                       fontSize: 18,
                                       fontFamily: 'RobotoCondensed',
                                       color: Colors.black,
@@ -347,6 +352,12 @@ class _DebitState extends State<Debit> {
                                     onPressed: () {
                                       print("bonus: " + bonus.toString());
                                       Common.sessionApi!.postSession(sessionID!, body: BonusCharge(amount: bonus));
+                                      setState(() {
+                                        bonusBalance = bonusBalance - bonus;
+                                        bonus = bonusBalance;
+                                        _currentSliderValue = bonus;
+                                        txt.text = bonus.toString();
+                                      });
                                     },
                                     child: Text("Подтвердить", style: TextStyle(
                                       fontSize: 18,
