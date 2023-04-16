@@ -104,7 +104,7 @@ class SessionApi {
     return null;
   }
 
-  /// Performs an HTTP 'POST /session/{UID}' operation and returns the [Response].
+  /// Performs an HTTP 'POST /session/{UID}/bonuses' operation and returns the [Response].
   /// Parameters:
   ///
   /// * [String] UID (required):
@@ -112,7 +112,7 @@ class SessionApi {
   /// * [BonusCharge] body:
   Future<Response> postSessionWithHttpInfo(String UID, { BonusCharge? body, }) async {
     // ignore: prefer_const_declarations
-    final path = r'/session/{UID}'
+    final path = r'/session/{UID}/bonuses'
       .replaceAll('{UID}', UID);
 
     // ignore: prefer_final_locals

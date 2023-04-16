@@ -7,6 +7,8 @@ import 'package:share_buisness_front_end/pages/debit.dart';
 import 'package:share_buisness_front_end/pages/login.dart';
 import 'package:share_buisness_front_end/pages/profile.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
+import 'package:provider/provider.dart';
+import 'service/authProvider.dart';
 
 final routes = RouteMap(
     routes: {
@@ -21,9 +23,10 @@ final routemaster = RoutemasterDelegate(
 );
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    // Replace with actual values
-    options: FirebaseOptions(
+
+    options: const FirebaseOptions(
         apiKey: "AIzaSyBq2HgLyU9y3G68uw_VaTSnxfZpvL8BxIo",
         authDomain: "openwashing.firebaseapp.com",
         projectId: "openwashing",
@@ -54,9 +57,15 @@ void main() async {
       Common.SetAuthToken(await user.getIdToken());
     }
   });
-  runApp(MaterialApp.router(
-    routerDelegate: routemaster,
-    routeInformationParser: RoutemasterParser(),
-    debugShowCheckedModeBanner: false,
-  ));
+
+  runApp(
+      ChangeNotifierProvider(
+          create: (context) => AuthProvider(),
+        child: MaterialApp.router(
+          title: "DIA Electronics",
+          routerDelegate: routemaster,
+          routeInformationParser: const RoutemasterParser(),
+          debugShowCheckedModeBanner: false,
+        ),
+      ),);
 }
