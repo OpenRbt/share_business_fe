@@ -27,6 +27,7 @@ class _DebitState extends State<Debit> {
 
   _DebitState({this.sessionID});
 
+
   var txt = TextEditingController();
   late User? user;
 
@@ -39,7 +40,6 @@ class _DebitState extends State<Debit> {
     if (sessionID != null) {
       try {
         Future<Session?> session = Common.sessionApi!.getSession(sessionID!);
-        //balanceResponse.
         return session;
       } on HttpException catch (_) {
         if (kDebugMode) {
@@ -55,26 +55,23 @@ class _DebitState extends State<Debit> {
   }
 
   late int bonusBalance;
-  late int bonus;
-  late int _currentSliderValue;
+  int bonus = 0;
+  int _currentSliderValue = 0;
 
   @override
   void initState() async {
     super.initState();
-    Future<GetBalance200Response?> balanceResponse =
-        Common.userApi!.getBalance();
-    balanceResponse.then((value) {
-      bonusBalance = (value?.balance ?? 0);
-      bonus = bonusBalance;
-      _currentSliderValue = bonus;
-      txt.text = bonus.toString();
-    });
+    txt.text = bonus.toString();
   }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
+    Future<GetBalance200Response?> balanceResponse = Common.userApi!.getBalance();
+    balanceResponse.then((value) {
+      bonusBalance = (value?.balance ?? 0);
+    });
     return user != null
         ? Scaffold(
             drawer: SideMenu(sessionID: sessionID),
