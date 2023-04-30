@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/side_menu.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
+import '../service/authentication.dart';
 
 import '../service/authProvider.dart';
 
@@ -100,20 +101,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           Row(
                             children: [
-                              Text('ID ${snapshot.data!.id}',
+                              Flexible(
+                                child: Text('Имя ${user?.displayName ?? ""}',
                                 style: const TextStyle(
-                                  fontSize: 60,
+                                  fontSize: 40,
                                   fontFamily: 'RobotoCondensed',
                                   color: Colors.black,
                                   fontWeight: FontWeight.w700,
                                 ),
-                              ),
+                              ),)
                             ],
                           ),
                           const SizedBox(height: 5,),
                           Row(
                             children: [
-                              Text(
+                              Flexible(
+                                child: Text(
                                 'Баланс ${snapshot.data?.balance.toString() ?? "0"}',
                                 style: const TextStyle(
                                   fontSize: 40,
@@ -121,7 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   color: Colors.black,
                                   fontWeight: FontWeight.w700,
                                 ),
-                              ),
+                              ),)
                             ],
                           )
                         ],

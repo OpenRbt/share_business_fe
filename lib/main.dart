@@ -25,7 +25,6 @@ final routemaster = RoutemasterDelegate(
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-
     options: const FirebaseOptions(
         apiKey: "AIzaSyBq2HgLyU9y3G68uw_VaTSnxfZpvL8BxIo",
         authDomain: "openwashing.firebaseapp.com",
@@ -37,8 +36,8 @@ void main() async {
     ),
   );
 
-  Common.userApi = UserApi(ApiClient(basePath: 'http://app.openwashing.com:8071', authentication: HttpBearerAuth()));
-  Common.sessionApi = SessionApi(ApiClient(basePath: 'http://app.openwashing.com:8071', authentication: HttpBearerAuth()));
+  Common.userApi = UserApi(ApiClient(authentication: HttpBearerAuth()));
+  Common.sessionApi = SessionApi(ApiClient(authentication: HttpBearerAuth()));
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       routemaster.popUntil((RouteData data) {
