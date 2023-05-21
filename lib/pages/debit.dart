@@ -382,7 +382,7 @@ class _DebitState extends State<Debit> {
                                               bonusBalance =
                                                   balanceResponse?.balance ?? 0;
                                               bonus = bonusBalance;
-                                              _currentSliderValue = bonus;
+                                              _currentSliderValue = 0;
                                               txt.text = bonus.toString();
                                             });
                                           } catch (e) {

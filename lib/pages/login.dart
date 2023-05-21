@@ -99,9 +99,6 @@ class _LoginViewState extends State<Login> {
                                               User? user =
                                               await auth.Authentication.signInWithGoogle(context: context);
 
-                                              setState(() {
-                                                _isSigningIn = false;
-                                              });
                                               if(user == null ) return;
                                               authProvider.user = user;
                                               if(sessionID == null){
