@@ -20,6 +20,7 @@ class _LoginViewState extends State<Login> {
 
   late String? sessionID;
   bool _isSigningIn = false;
+  late User? user;
 
   _LoginViewState({this.sessionID});
 
@@ -36,6 +37,7 @@ class _LoginViewState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    user =  authProvider.user;
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
@@ -65,7 +67,7 @@ class _LoginViewState extends State<Login> {
                           } else if (snapshot.connectionState == ConnectionState.done) {
                             return Expanded(
                               child: Center(
-                                child: _isSigningIn
+                                child: user != null
                                     ? Column(
                                   children: const [
                                     SizedBox(height: 300,),
@@ -92,11 +94,8 @@ class _LoginViewState extends State<Login> {
                                                 )
                                             ),
                                             onPressed: () async {
-                                              setState(() {
-                                                _isSigningIn = true;
-                                              });
 
-                                              User? user =
+                                              user =
                                               await auth.Authentication.signInWithGoogle(context: context);
 
                                               if(user == null ) return;
