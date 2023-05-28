@@ -58,7 +58,7 @@ class _SideMenuState extends State<SideMenu> {
                         )
                     )
                 ),
-                onPressed: () {routemaster.push('/profile?');},
+                onPressed: () {routemaster.push('/profile');},
                 child: const Text('Перейти в профиль',
                   style: TextStyle(
                     fontSize: 30,

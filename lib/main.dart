@@ -7,6 +7,7 @@ import 'package:share_buisness_front_end/pages/debit.dart';
 import 'package:share_buisness_front_end/pages/login.dart';
 import 'package:share_buisness_front_end/pages/profile.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:provider/provider.dart';
 import 'service/authProvider.dart';
 
@@ -36,8 +37,13 @@ void main() async {
     ),
   );
 
+  LocalStorage storage = LocalStorage('share_business');
+  await storage.ready;
+
   Common.userApi = UserApi(ApiClient(authentication: HttpBearerAuth()));
   Common.sessionApi = SessionApi(ApiClient(authentication: HttpBearerAuth()));
+
+  /*
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       routemaster.popUntil((RouteData data) {
@@ -48,7 +54,7 @@ void main() async {
       });
     }
   });
-
+*/
   FirebaseAuth.instance.idTokenChanges().listen((User? user) async {
     if (user == null) {
       Common.SetAuthToken("");

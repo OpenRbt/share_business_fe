@@ -11,6 +11,9 @@ class AuthProvider with ChangeNotifier {
     _user = newUser;
     notifyListeners();
   }
+  Future<User?> get firstUser => _auth.userChanges().first;
+
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
   AuthProvider() {
     _auth.authStateChanges().listen((User? user) {

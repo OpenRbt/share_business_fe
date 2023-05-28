@@ -117,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               Flexible(
                                 child: Text(
-                                'Баланс ${snapshot.data?.balance.toString() ?? "0"}',
+                                'Баланс ${snapshot.data?.balance ?? "0"}',
                                 style: const TextStyle(
                                   fontSize: 40,
                                   fontFamily: 'RobotoCondensed',

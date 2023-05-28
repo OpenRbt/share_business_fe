@@ -27,7 +27,6 @@ class _DebitState extends State<Debit> {
 
   _DebitState({this.sessionID});
 
-
   var txt = TextEditingController();
   late User? user;
 
@@ -38,18 +37,31 @@ class _DebitState extends State<Debit> {
 
   Future<Session?> _refreshSession() async {
     if (sessionID != null) {
-      try {
-        Future<Session?> session = Common.sessionApi!.getSession(sessionID!);
-        return session;
-      } on HttpException catch (_) {
-        if (kDebugMode) {
-          print("HttpException");
+        int count = 0;
+        while (count != 10){
+          try {
+            Future<Session?> session = Common.sessionApi!.getSession(sessionID!);
+            GetBalance200Response? balanceResponse = await Common.userApi!.getBalance();
+            bonusBalance = balanceResponse?.balance ?? 0;
+            return session;
+          } on TimeoutException catch (e) {
+            count++;
+            if (kDebugMode) {
+              print('Request timed out');
+            }
+          } on HttpException catch (_) {
+            count++;
+            if (kDebugMode) {
+              print("HttpException");
+            }
+          } catch (_) {
+            count++;
+            if (kDebugMode) {
+              print("OtherException");
+            }
+          }
         }
-      } catch (_) {
-        if (kDebugMode) {
-          print("OtherException");
-        }
-      }
+
     }
     return null;
   }
@@ -59,7 +71,7 @@ class _DebitState extends State<Debit> {
   int _currentSliderValue = 0;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     txt.text = bonus.toString();
   }
@@ -68,10 +80,6 @@ class _DebitState extends State<Debit> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
-    Future<GetBalance200Response?> balanceResponse = Common.userApi!.getBalance();
-    balanceResponse.then((value) {
-      bonusBalance = (value?.balance ?? 0);
-    });
     return user != null
         ? Scaffold(
             drawer: SideMenu(sessionID: sessionID),
@@ -166,6 +174,9 @@ class _DebitState extends State<Debit> {
                                       _currentSliderValue = int.parse(txt.text);
                                       bonus = _currentSliderValue;
                                     });
+                                  } else if (int.parse(text) > bonusBalance){
+                                    _currentSliderValue = bonusBalance;
+                                    bonus = _currentSliderValue;
                                   }
                                 },
                                 decoration: const InputDecoration(
@@ -366,9 +377,6 @@ class _DebitState extends State<Debit> {
                                                   BorderRadius.circular(1),
                                             ))),
                                         onPressed: () async {
-                                          if (kDebugMode) {
-                                            print("bonus: $bonus");
-                                          }
                                           try {
                                             await Common.sessionApi!
                                                 .postSession(sessionID!,
@@ -381,9 +389,9 @@ class _DebitState extends State<Debit> {
                                             setState(() {
                                               bonusBalance =
                                                   balanceResponse?.balance ?? 0;
-                                              bonus = bonusBalance;
+                                              bonus = 0;
                                               _currentSliderValue = 0;
-                                              txt.text = bonus.toString();
+                                              txt.text = 0.toString();
                                             });
                                           } catch (e) {
                                             showDialog<String>(
@@ -421,13 +429,14 @@ class _DebitState extends State<Debit> {
                           ],
                         ));
                       } else if (snapshot.hasError) {
-                        return const Text("Wrong parametrs",
+                        return const Text("Wrong parametrs in Future Builder",
                             style: TextStyle(
                               fontSize: 30,
                               fontFamily: 'Roboto',
                               color: Colors.black,
                               decoration: TextDecoration.none,
                             ));
+                        //} else if (snapshot.connectionState) {
                       } else {
                         return Column(
                           children: const [
@@ -446,7 +455,7 @@ class _DebitState extends State<Debit> {
                       }
                     },
                   )
-                : const Text("Wrong parametrs",
+                : const Text("Wrong parametrs in body",
                     style: TextStyle(
                       fontSize: 30,
                       fontFamily: 'Roboto',
