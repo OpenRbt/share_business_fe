@@ -34,10 +34,43 @@ class _LoginViewState extends State<Login> {
     super.dispose();
   }
 
+  Future<void> performLogin() async {
+    await auth.Authentication.initializeFirebase(context: context);
+    // Выполняется только после того, как initializeFirebase завершена
+    if ( user != null) {
+      if(sessionID != null){
+          try {
+            await Common.sessionApi!.assignUserToSession(sessionID!).timeout(const Duration(seconds: 3));
+            routemaster.push('/debit?sessionID=${sessionID!}');
+            return;
+          } catch (e) {
+            user = null;
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Ошибка'),
+                content: const Text('Сессия недоступна'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
+          }
+      }
+      else{
+        routemaster.push('/profile');
+        return;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    user =  authProvider.user;
+    user = authProvider.user;
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
@@ -60,7 +93,7 @@ class _LoginViewState extends State<Login> {
                   child: Column(
                     children: [
                       FutureBuilder(
-                        future: auth.Authentication.initializeFirebase(context: context),
+                        future: performLogin(),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) {
                             return Text(snapshot.error.toString());
@@ -70,7 +103,7 @@ class _LoginViewState extends State<Login> {
                                 child: user != null
                                     ? Column(
                                   children: const [
-                                    SizedBox(height: 300,),
+                                    SizedBox(height: 500,),
                                     CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                                     ),
@@ -94,41 +127,10 @@ class _LoginViewState extends State<Login> {
                                                 )
                                             ),
                                             onPressed: () async {
-
                                               user =
                                               await auth.Authentication.signInWithGoogle(context: context);
-
                                               if(user == null ) return;
                                               authProvider.user = user;
-                                              if(sessionID == null){
-                                                routemaster.push('/profile');
-                                                return;
-                                              }
-
-                                              int count = 0;
-                                              while(count != 10){
-                                                try{
-                                                  await Common.sessionApi!.assignUserToSession(sessionID!);
-                                                  routemaster.push('/debit?sessionID=${sessionID!}');
-                                                  break;
-                                                }
-                                                catch (e) {
-                                                  count++;
-                                                }
-                                              }
-                                              showDialog<String>(
-                                                context: context,
-                                                builder: (BuildContext context) => AlertDialog(
-                                                  title: const Text('Ошибка'),
-                                                  content: const Text('Сессия недоступна'),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      onPressed: () => Navigator.pop(context, 'OK'),
-                                                      child: const Text('OK'),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
                                             },
                                             child: const Text("Войти", style:
                                             TextStyle(
