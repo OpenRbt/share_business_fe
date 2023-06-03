@@ -43,7 +43,7 @@ void main() async {
   Common.userApi = UserApi(ApiClient(authentication: HttpBearerAuth()));
   Common.sessionApi = SessionApi(ApiClient(authentication: HttpBearerAuth()));
 
-  /*
+
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       routemaster.popUntil((RouteData data) {
@@ -54,7 +54,7 @@ void main() async {
       });
     }
   });
-*/
+
   FirebaseAuth.instance.idTokenChanges().listen((User? user) async {
     if (user == null) {
       Common.SetAuthToken("");
