@@ -1,6 +1,9 @@
+import 'dart:html';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../main.dart';
 import '../service/authProvider.dart';
@@ -19,7 +22,6 @@ class Login extends StatefulWidget {
 class _LoginViewState extends State<Login> {
 
   late String? sessionID;
-  bool _isSigningIn = false;
   late User? user;
 
   _LoginViewState({this.sessionID});
@@ -35,6 +37,7 @@ class _LoginViewState extends State<Login> {
   }
 
   Future<void> performLogin() async {
+    await DefaultCacheManager().emptyCache();
     await auth.Authentication.initializeFirebase(context: context);
     // Выполняется только после того, как initializeFirebase завершена
     if ( user != null) {
@@ -71,6 +74,13 @@ class _LoginViewState extends State<Login> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
+    var fullUri = Uri.parse(window.location.href);
+
+    // Получите фрагмент URI и преобразуйте его в новый URI
+    var fragmentUri = Uri.parse(fullUri.fragment);
+
+    sessionID = fragmentUri.queryParameters['sessionID'];
+    print(sessionID);
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
@@ -108,8 +118,7 @@ class _LoginViewState extends State<Login> {
                                       valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                                     ),
                                   ],
-                                )
-                                    : SizedBox(
+                                ) : SizedBox(
                                     height: 150,
                                     width: 300,
                                     child: Column(
