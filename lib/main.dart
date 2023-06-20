@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/debit.dart';
@@ -24,16 +27,19 @@ final routemaster = RoutemasterDelegate(
 );
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+  final String response = await rootBundle.loadString('assets/keys.json');
+  Map<String, dynamic> jsonData = json.decode(response);
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-        apiKey: "AIzaSyBq2HgLyU9y3G68uw_VaTSnxfZpvL8BxIo",
-        authDomain: "openwashing.firebaseapp.com",
-        projectId: "openwashing",
-        storageBucket: "openwashing.appspot.com",
-        messagingSenderId: "931729817638",
-        appId: "1:931729817638:web:0e6a02d606f0389e1c66e7",
-        measurementId: "G-4HD7TZX4BE"
+    options: FirebaseOptions(
+        apiKey: jsonData['apiKey'],
+        authDomain: jsonData['authDomain'],
+        projectId: jsonData['projectId'],
+        storageBucket: jsonData['storageBucket'],
+        messagingSenderId: jsonData['messagingSenderId'],
+        appId: jsonData['appId'],
+        measurementId: jsonData['measurementId']
     ),
   );
 

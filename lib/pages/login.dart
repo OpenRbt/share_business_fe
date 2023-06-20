@@ -23,6 +23,7 @@ class _LoginViewState extends State<Login> {
 
   late String? sessionID;
   late User? user;
+  bool _isLoginButtonPressed = false;
 
   _LoginViewState({this.sessionID});
 
@@ -75,12 +76,8 @@ class _LoginViewState extends State<Login> {
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
     var fullUri = Uri.parse(window.location.href);
-
-    // Получите фрагмент URI и преобразуйте его в новый URI
     var fragmentUri = Uri.parse(fullUri.fragment);
-
     sessionID = fragmentUri.queryParameters['sessionID'];
-    print(sessionID);
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
@@ -135,11 +132,22 @@ class _LoginViewState extends State<Login> {
                                                     )
                                                 )
                                             ),
-                                            onPressed: () async {
+                                            onPressed: _isLoginButtonPressed ? null : () async {
+                                              setState(() {
+                                                _isLoginButtonPressed = true;
+                                              });
                                               user =
                                               await auth.Authentication.signInWithGoogle(context: context);
-                                              if(user == null ) return;
+                                              if(user == null ){
+                                                setState(() {
+                                                  _isLoginButtonPressed = false;
+                                                });
+                                                return;
+                                              };
                                               authProvider.user = user;
+                                              setState(() {
+                                                _isLoginButtonPressed = false;
+                                              });
                                             },
                                             child: const Text("Войти", style:
                                             TextStyle(
