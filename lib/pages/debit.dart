@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,8 @@ class Debit extends StatefulWidget {
 
 class _DebitState extends State<Debit> {
   late String? sessionID;
+
+  bool _isAcceptButtonPressed = false;
 
   _DebitState({this.sessionID});
 
@@ -80,6 +83,9 @@ class _DebitState extends State<Debit> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
+    var fullUri = Uri.parse(window.location.href);
+    var fragmentUri = Uri.parse(fullUri.fragment);
+    sessionID = fragmentUri.queryParameters['sessionID'];
     return user != null
         ? Scaffold(
             drawer: SideMenu(sessionID: sessionID),
@@ -377,6 +383,9 @@ class _DebitState extends State<Debit> {
                                                   BorderRadius.circular(1),
                                             ))),
                                         onPressed: () async {
+                                          setState(() {
+                                            _isAcceptButtonPressed = false;
+                                          });
                                           try {
                                             await Common.sessionApi!
                                                 .postSession(sessionID!,
@@ -412,6 +421,9 @@ class _DebitState extends State<Debit> {
                                               ),
                                             );
                                           }
+                                          setState(() {
+                                            _isAcceptButtonPressed = false;
+                                          });
                                         },
                                         child: const Text(
                                           "Подтвердить",

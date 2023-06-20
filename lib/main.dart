@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/debit.dart';
@@ -24,16 +27,19 @@ final routemaster = RoutemasterDelegate(
 );
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+  final String response = await rootBundle.loadString('assets/keys.json');
+  Map<String, dynamic> jsonData = json.decode(response);
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
+    options: FirebaseOptions(
         apiKey: jsonData['apiKey'],
-        apiKey: jsonData['authDomain'],
-        apiKey:jsonData['projectId'],
-        apiKey: jsonData['storageBucket'],
-        apiKey: jsonData['messagingSenderId'],
-        apiKey: jsonData['appId'],
-        apiKey: jsonData['measurementId']
+        authDomain: jsonData['authDomain'],
+        projectId: jsonData['projectId'],
+        storageBucket: jsonData['storageBucket'],
+        messagingSenderId: jsonData['messagingSenderId'],
+        appId: jsonData['appId'],
+        measurementId: jsonData['measurementId']
     ),
   );
 
