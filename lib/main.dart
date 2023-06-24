@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -75,8 +76,18 @@ void main() async {
         child: MaterialApp.router(
           title: "DIA Electronics",
           routerDelegate: routemaster,
+          theme: ThemeData(
+            brightness: Brightness.light,
+            primaryColor: Colors.white
+          ),
+          darkTheme: ThemeData(
+              brightness: Brightness.light,
+              primaryColorDark: Colors.white
+          ),
+          themeMode: ThemeMode.system,
           routeInformationParser: const RoutemasterParser(),
           debugShowCheckedModeBanner: false,
         ),
-      ),);
+      ),
+  );
 }

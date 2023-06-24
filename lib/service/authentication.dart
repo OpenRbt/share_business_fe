@@ -25,17 +25,18 @@ class Authentication {
 
     if (kIsWeb) {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
-
       try {
-        final UserCredential userCredential =
-        await auth.signInWithPopup(authProvider);
+        await auth.signInWithRedirect(authProvider);
+        log("authProvider.parameters.keys:");
+        log(authProvider.parameters.keys.toString());
+        final UserCredential userCredential = await auth.getRedirectResult();
 
         user = userCredential.user;
       } catch (e) {
         print(e);
       }
     } else {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignIn googleSignIn = GoogleSignIn(signInOption: SignInOption.standard);
 
       final GoogleSignInAccount? googleSignInAccount =
       await googleSignIn.signIn();

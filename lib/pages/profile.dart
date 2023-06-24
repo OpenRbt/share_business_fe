@@ -79,7 +79,6 @@ class _ProfilePageState extends State<ProfilePage> {
             foregroundColor: Colors.black,
           ),
         drawer: SideMenu(sessionID: sessionID),
-        backgroundColor: Colors.white,
         body: FutureBuilder<Profile?> (
           future: _refreshProfile(),
           builder: (BuildContext context, AsyncSnapshot<Profile?> snapshot){

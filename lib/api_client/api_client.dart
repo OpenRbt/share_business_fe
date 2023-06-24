@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'https://app.openwashing.com/api/bonus', this.authentication,});
+  ApiClient({this.basePath = 'https://dev.openwashing.com/api/bonus', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;

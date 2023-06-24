@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -94,7 +95,6 @@ class _LoginViewState extends State<Login> {
             centerTitle: false,
           ),
         ),
-        backgroundColor: Colors.white,
       body: SafeArea(
                 child: Center(
                   child: Column(
@@ -177,7 +177,39 @@ class _LoginViewState extends State<Login> {
                                               width: 50,
                                             )
                                           ],
-                                        )
+                                        ),
+                                        const SizedBox(height: 10,),
+                                        RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Как пользоваться бонусной программой?',
+                                                style: const TextStyle(
+                                                  color: Colors.blue,
+                                                  decoration: TextDecoration.underline,
+                                                ),
+                                                recognizer: TapGestureRecognizer()
+                                                  ..onTap = () {
+                                                    showDialog<String>(
+                                                      context: context,
+                                                      builder: (BuildContext context) => AlertDialog(
+                                                        title: const Text('Информация'),
+                                                        content: const Text('1. Нажмите "Войти" и авторизируйтсь в своём гугл-аккаунте.'
+                                                            '\n2. Введите количество бонусов, которое хотите списать.'
+                                                            '\n3. Нажмите кнопку "Списать". Зачисленные бонусы отобразятся на терминале.'),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () => Navigator.pop(context, 'OK'),
+                                                            child: const Text('OK'),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     )
                                 ),

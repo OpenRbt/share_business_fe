@@ -95,13 +95,36 @@ class _DebitState extends State<Debit> {
                 width: 200,
                 height: 200,
               ),
+              flexibleSpace: Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  iconSize: 45,
+                    icon: const Icon(Icons.info_outline), onPressed: () => {
+                {
+                  showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('О бонусной программе'),
+                    content: const Text('Оставшиеся деньги зачисляются в виде сдачи на бонусный счёт.\nТакже с каждой мойки в течении 10 дней начисляется 5% при оплате наличными или по карте.'
+                        '\nМожно оплачивать мойку полностью за счёт бонусов.'
+                        '\nДля того, чтобы сдача вернулась на бонусный счёт нажмите на кнопку паузы, а затем на кнопку "стоп", после этого подвердите завершение мойки.'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                )
+              },
+                }),
+              ),
               elevation: 0,
               centerTitle: false,
               shadowColor: Colors.white,
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
             ),
-            backgroundColor: Colors.white,
             body: sessionID != null
                 ? FutureBuilder<Session?>(
                     future: _refreshSession(),
@@ -109,20 +132,13 @@ class _DebitState extends State<Debit> {
                         AsyncSnapshot<Session?> snapshot) {
                       if (snapshot.hasData) {
                         return SafeArea(
+                            bottom: true,
                             child: Column(
                           children: [
+                            const SizedBox(height: 50,),
                             Center(
                                 child: Column(
                               children: [
-                                const SizedBox(height: 50),
-                                Text(
-                                    "Мойка: ${snapshot.data?.postID.toString() ?? ""}",
-                                    style: const TextStyle(
-                                      fontSize: 30,
-                                      fontFamily: 'Roboto',
-                                      color: Colors.black,
-                                    )),
-                                const SizedBox(height: 10),
                                 Text(
                                     "Пост: ${snapshot.data?.postID.toString() ?? ""}",
                                     style: const TextStyle(
@@ -426,7 +442,7 @@ class _DebitState extends State<Debit> {
                                           });
                                         },
                                         child: const Text(
-                                          "Подтвердить",
+                                          "Списать",
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontFamily: 'RobotoCondensed',
