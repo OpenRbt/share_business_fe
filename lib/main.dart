@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +16,9 @@ import 'service/authProvider.dart';
 
 final routes = RouteMap(
     routes: {
-      '/': (route) => MaterialPage(child: Login(sessionID: route.queryParameters['sessionID'])),
-      '/debit': (route) => MaterialPage(child: Debit(sessionID: route.queryParameters['sessionID'])),
-      '/profile': (route) => MaterialPage(child: ProfilePage(sessionID: route.queryParameters['sessionID'])),
+      '/': (route) => const MaterialPage(child: Login()),
+      '/debit': (route) => const MaterialPage(child: Debit()),
+      '/profile': (route) => const MaterialPage(child: ProfilePage()),
     }
 );
 

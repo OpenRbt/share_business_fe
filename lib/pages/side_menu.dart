@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:share_buisness_front_end/widgetStyles/buttons/button_styles.dart';
+import 'package:share_buisness_front_end/widgetStyles/text/text.dart';
 
 import '../main.dart';
 import '../service/authentication.dart';
@@ -48,24 +50,10 @@ class _SideMenuState extends State<SideMenu> {
               height: 100,
               width: 200,
               child: ElevatedButton(
-                style: ButtonStyle(
-                    side: MaterialStateBorderSide.resolveWith((states) => const BorderSide(width: 3, color: Colors.white)),
-                    backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromRGBO(68, 68, 68, 1)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-
-                          borderRadius: BorderRadius.circular(10),
-                        )
-                    )
-                ),
+                style: ButtonStyles.whiteButtonWithGreyBorder(),
                 onPressed: () {routemaster.push('/profile');},
-                child: const Text('Перейти в профиль',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontFamily: 'RobotoCondensed',
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
+                child: Text('Перейти в профиль',
+                  style: TextStyles.profileText(),
                 ),
               ),
             ),
@@ -74,15 +62,7 @@ class _SideMenuState extends State<SideMenu> {
               height: 50,
               width: 150,
               child: ElevatedButton(
-                style: ButtonStyle(
-                    side: MaterialStateBorderSide.resolveWith((states) => const BorderSide(width: 3, color: Colors.white)),
-                    backgroundColor: const MaterialStatePropertyAll<Color>(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(1),
-                        )
-                    )
-                ),
+                style: ButtonStyles.whiteButton(),
                 onPressed: () async {
                   setState(() {
                     _isSigningOut = true;
@@ -92,13 +72,9 @@ class _SideMenuState extends State<SideMenu> {
                     _isSigningOut = false;
                   });
                 },
-                child: const Text('Выйти',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontFamily: 'RobotoCondensed',
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                  ),),
+                child: Text('Выйти',
+                  style: TextStyles.exitText(),
+                ),
               ),
             )
           ],

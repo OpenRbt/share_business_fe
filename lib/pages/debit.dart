@@ -10,25 +10,28 @@ import 'package:provider/provider.dart';
 import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/side_menu.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
+import 'package:share_buisness_front_end/widgetStyles/text/text.dart';
 
 import '../service/authProvider.dart';
 import '../service/authentication.dart' as auth;
+import '../utils/modal_window.dart';
+import '../widgetStyles/buttons/button_styles.dart';
+import '../widgetStyles/sliders/slider_styles.dart';
+import '../widgets/appBars/main_app_bar.dart';
+import '../widgets/progressIndicators/progress_indicators.dart';
 
 class Debit extends StatefulWidget {
-  late String? sessionID;
 
-  Debit({super.key, this.sessionID});
+  const Debit({super.key});
 
   @override
-  State<Debit> createState() => _DebitState(sessionID: sessionID);
+  State<Debit> createState() => _DebitState();
 }
 
 class _DebitState extends State<Debit> {
   late String? sessionID;
 
   bool _isAcceptButtonPressed = false;
-
-  _DebitState({this.sessionID});
 
   var txt = TextEditingController();
   late User? user;
@@ -89,41 +92,9 @@ class _DebitState extends State<Debit> {
     return user != null
         ? Scaffold(
             drawer: SideMenu(sessionID: sessionID),
-            appBar: AppBar(
-              title: Image.asset(
-                "assets/wash_logo.png",
-                width: 200,
-                height: 200,
-              ),
-              flexibleSpace: Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  iconSize: 45,
-                    icon: const Icon(Icons.info_outline), onPressed: () => {
-                {
-                  showDialog<String>(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                    title: const Text('О бонусной программе'),
-                    content: const Text('Оставшиеся деньги зачисляются в виде сдачи на бонусный счёт.\nТакже с каждой мойки в течении 10 дней начисляется 5% при оплате наличными или по карте.'
-                        '\nМожно оплачивать мойку полностью за счёт бонусов.'
-                        '\nДля того, чтобы сдача вернулась на бонусный счёт нажмите на кнопку паузы, а затем на кнопку "стоп", после этого подвердите завершение мойки.'),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                )
-              },
-                }),
-              ),
-              elevation: 0,
-              centerTitle: false,
-              shadowColor: Colors.white,
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
+            appBar: const PreferredSize(
+              preferredSize: Size.fromHeight(50.0),
+              child: MainAppBar(),
             ),
             body: sessionID != null
                 ? FutureBuilder<Session?>(
@@ -141,11 +112,8 @@ class _DebitState extends State<Debit> {
                               children: [
                                 Text(
                                     "Пост: ${snapshot.data?.postID.toString() ?? ""}",
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontFamily: 'Roboto',
-                                      color: Colors.black,
-                                    )),
+                                    style: TextStyles.postText(),
+                                ),
                               ],
                             )),
                             Container(
@@ -156,32 +124,22 @@ class _DebitState extends State<Debit> {
                                 children: [
                                   const SizedBox(height: 30),
                                   Text("Баланс бонусов: $bonusBalance",
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'Roboto',
-                                        color: Colors.black,
-                                      )),
+                                      style: TextStyles.balanceText()
+                                  ),
                                   const SizedBox(height: 10),
                                 ],
                               ),
                             ),
                             const SizedBox(height: 50),
-                            const Text("Списать бонусы",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontFamily: 'Roboto',
-                                  color: Colors.black,
-                                )),
+                            Text("Списать бонусы",
+                                style: TextStyles.postText(),
+                            ),
                             const SizedBox(height: 10),
                             SizedBox(
                               width: 100,
                               height: 45,
                               child: TextField(
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Roboto',
-                                  color: Colors.black,
-                                ),
+                                style: TextStyles.balanceText(),
                                 controller: txt,
                                 keyboardType: TextInputType.number,
                                 onChanged: (text) {
@@ -240,18 +198,7 @@ class _DebitState extends State<Debit> {
                                   height: 30,
                                   width: 30,
                                   child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              const MaterialStatePropertyAll<
-                                                      Color>(
-                                                  Color.fromRGBO(
-                                                      227, 1, 15, 1)),
-                                          shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                          ))),
+                                      style: ButtonStyles.redButton(),
                                       onPressed: () {
                                         if (bonus > 0) {
                                           setState(() {
@@ -261,29 +208,13 @@ class _DebitState extends State<Debit> {
                                           });
                                         }
                                       },
-                                      child: const Text(
-                                        '-',
-                                        style: TextStyle(
-                                          fontSize: 25,
-                                          fontFamily: 'Roboto',
-                                          color: Colors.white,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                      child: const Icon(
+                                      Icons.remove
+                                  )
+                                  ),
                                 ),
                                 SliderTheme(
-                                    data: const SliderThemeData(
-                                      activeTrackColor: Colors.black,
-                                      inactiveTrackColor: Colors.black,
-                                      thumbColor: Color.fromRGBO(227, 1, 15, 1),
-                                      trackHeight: 3,
-                                      trackShape: RectangularSliderTrackShape(),
-                                      thumbShape: RoundSliderThumbShape(
-                                          enabledThumbRadius: 10),
-                                      valueIndicatorShape:
-                                          RectangularSliderValueIndicatorShape(),
-                                      valueIndicatorColor: Colors.black,
-                                    ),
+                                    data: SliderStyles.moneyAmountSlider(),
                                     child: Slider(
                                       value: _currentSliderValue.toDouble(),
                                       max: bonusBalance.toDouble(),
@@ -299,22 +230,13 @@ class _DebitState extends State<Debit> {
                                           bonus = _currentSliderValue;
                                         });
                                       },
-                                    )),
+                                    )
+                                ),
                                 SizedBox(
                                   height: 30,
                                   width: 30,
                                   child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            const MaterialStatePropertyAll<
-                                                    Color>(
-                                                Color.fromRGBO(227, 1, 15, 1)),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(1),
-                                        ))),
+                                    style: ButtonStyles.redButton(),
                                     onPressed: () {
                                       if (bonus < bonusBalance) {
                                         setState(() {
@@ -324,15 +246,7 @@ class _DebitState extends State<Debit> {
                                         });
                                       }
                                     },
-                                    child: const Text(
-                                      '+',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontFamily: 'Roboto',
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    child: const Icon(Icons.add),
                                   ),
                                 )
                               ],
@@ -348,38 +262,18 @@ class _DebitState extends State<Debit> {
                                     child: Container(
                                       margin: const EdgeInsets.only(left: 10.0),
                                       child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            side: MaterialStateBorderSide
-                                                .resolveWith((states) =>
-                                                    const BorderSide(
-                                                        width: 3,
-                                                        color: Color.fromRGBO(
-                                                            227, 1, 15, 1))),
-                                            backgroundColor:
-                                                const MaterialStatePropertyAll<Color>(
-                                                    Colors.white),
-                                            shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(1),
-                                            ))),
+                                        style: ButtonStyles.whiteButtonWithRedBorder(),
                                         onPressed: () async {
                                           await auth.Authentication.signOut(
                                               context: context);
-                                          //routemaster.push('/');
                                         },
-                                        child: const Text(
+                                        child: Text(
                                           "Выход",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontFamily: 'RobotoCondensed',
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w700,
-                                          ),
+                                          style: TextStyles.cancelText(),
                                         ),
                                       ),
-                                    )),
+                                    )
+                                ),
                                 SizedBox(
                                     height: 40,
                                     width: 150,
@@ -387,17 +281,7 @@ class _DebitState extends State<Debit> {
                                       margin:
                                           const EdgeInsets.only(right: 10.0),
                                       child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            backgroundColor:
-                                                const MaterialStatePropertyAll<Color>(
-                                                    Color.fromRGBO(
-                                                        227, 1, 15, 1)),
-                                            shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(1),
-                                            ))),
+                                        style: ButtonStyles.redButton(),
                                         onPressed: () async {
                                           setState(() {
                                             _isAcceptButtonPressed = false;
@@ -406,7 +290,8 @@ class _DebitState extends State<Debit> {
                                             await Common.sessionApi!
                                                 .postSession(sessionID!,
                                                     body: BonusCharge(
-                                                        amount: bonus));
+                                                        amount: bonus)
+                                            );
                                             GetBalance200Response?
                                                 balanceResponse = await Common
                                                     .userApi!
@@ -419,77 +304,41 @@ class _DebitState extends State<Debit> {
                                               txt.text = 0.toString();
                                             });
                                           } catch (e) {
-                                            showDialog<String>(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  AlertDialog(
-                                                title: const Text('Ошибка'),
-                                                content: const Text(
-                                                    'Сессия недоступна'),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            context, 'OK'),
-                                                    child: const Text('OK'),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
+                                            showModalWindow(context, 'Ошибка', 'Сессия недоступна', 'OK');
                                           }
                                           setState(() {
                                             _isAcceptButtonPressed = false;
                                           });
                                         },
-                                        child: const Text(
+                                        child: Text(
                                           "Списать",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontFamily: 'RobotoCondensed',
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w700,
-                                          ),
+                                          style: TextStyles.withdrawText(),
                                         ),
                                       ),
-                                    )),
+                                    )
+                                ),
                               ],
                             )
                           ],
                         ));
                       } else if (snapshot.hasError) {
-                        return const Text("Wrong parametrs in Future Builder",
-                            style: TextStyle(
-                              fontSize: 30,
-                              fontFamily: 'Roboto',
-                              color: Colors.black,
-                              decoration: TextDecoration.none,
-                            ));
-                        //} else if (snapshot.connectionState) {
+                        return Container();
                       } else {
                         return Column(
-                          children: const [
-                            SizedBox(
+                          children: [
+                            const SizedBox(
                               height: 300.0,
                             ),
                             Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.black,
-                                ),
-                              ),
+                              child: ProgressIndicators.black(),
                             )
                           ],
                         );
                       }
                     },
                   )
-                : const Text("Wrong parametrs in body",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontFamily: 'Roboto',
-                      color: Colors.black,
-                      decoration: TextDecoration.none,
-                    )))
+                : Container()
+    )
         : Container();
   }
 }

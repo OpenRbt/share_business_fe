@@ -8,28 +8,26 @@ import 'package:provider/provider.dart';
 import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/side_menu.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
-import '../service/authentication.dart';
 
 import '../service/authProvider.dart';
+import '../widgetStyles/text/text.dart';
+import '../widgets/appBars/main_app_bar.dart';
+import '../widgets/progressIndicators/progress_indicators.dart';
 
 class ProfilePage extends StatefulWidget {
 
-  late String? sessionID;
-
-  ProfilePage({super.key, this.sessionID});
+  const ProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState(sessionID: sessionID);
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
 
-  late String? sessionID;
+  String? sessionID = "";
   late User? user;
 
   late Timer _profileRefresh;
-
-  _ProfilePageState({this.sessionID});
 
   @override
   void initState() {
@@ -66,18 +64,10 @@ class _ProfilePageState extends State<ProfilePage> {
     user = authProvider.user;
     return user != null ?
     Scaffold(
-        appBar: AppBar(
-            title: Image.asset(
-              "assets/wash_logo.png",
-              width: 200,
-              height: 200,
-            ),
-            elevation: 0,
-            centerTitle: false,
-            shadowColor: Colors.white,
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-          ),
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: MainAppBar(),
+        ),
         drawer: SideMenu(sessionID: sessionID),
         body: FutureBuilder<Profile?> (
           future: _refreshProfile(),
@@ -98,17 +88,23 @@ class _ProfilePageState extends State<ProfilePage> {
                         textDirection: TextDirection.ltr,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          (user?.displayName == null || user!.displayName!.isEmpty) ? Container():
                           Row(
                             children: [
                               Flexible(
-                                child: Text('Имя ${user?.displayName ?? ""}',
-                                style: const TextStyle(
-                                  fontSize: 40,
-                                  fontFamily: 'RobotoCondensed',
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                                child: Text('Имя ${user!.displayName}',
+                                style: TextStyles.profileInfoText(),
                               ),)
+                            ],
+                          ),
+                          const SizedBox(height: 5,),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text('Почта ${user?.email}',
+                                  style: TextStyles.profileInfoText(),
+                                ),
+                              )
                             ],
                           ),
                           const SizedBox(height: 5,),
@@ -117,13 +113,19 @@ class _ProfilePageState extends State<ProfilePage> {
                               Flexible(
                                 child: Text(
                                 'Баланс ${snapshot.data?.balance ?? "0"}',
-                                style: const TextStyle(
-                                  fontSize: 40,
-                                  fontFamily: 'RobotoCondensed',
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
+                                style: TextStyles.profileInfoText(),
                                 ),
-                              ),)
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  'Ожидает начисления ${snapshot.data?.balance ?? "0"}',
+                                  style: TextStyles.profileInfoText(),
+                                ),
+                              )
                             ],
                           )
                         ],
@@ -133,34 +135,22 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             }
             else if(snapshot.hasError){
-              return const Text("Wrong parameters", style: TextStyle(
-                fontSize: 30,
-                fontFamily: 'Roboto',
-                color: Colors.black,
-                decoration: TextDecoration.none,
-              ));
+              return Container();
             }
             else{
               return Column(
-                children: const [
-                  SizedBox(
+                children: [
+                  const SizedBox(
                     height: 300.0,
                   ),
                   Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.black,
-                      ),
-                    ),
+                    child: ProgressIndicators.black()
                   )
                 ],
               );
             }
           },
         )
-    )
-        :
-    Container(
-    );
+    ) : Container();
   }
 }

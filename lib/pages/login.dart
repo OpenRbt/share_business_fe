@@ -5,19 +5,22 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:share_buisness_front_end/widgetStyles/buttons/button_styles.dart';
+import 'package:share_buisness_front_end/widgetStyles/text/text.dart';
+import 'package:share_buisness_front_end/widgets/appBars/login_app_bar.dart';
 
 import '../main.dart';
 import '../service/authProvider.dart';
 import '../service/authentication.dart' as auth;
 import '../utils/common.dart';
+import '../utils/modal_window.dart';
+import '../widgets/progressIndicators/progress_indicators.dart';
 
 class Login extends StatefulWidget {
-  late String? sessionID;
-
-  Login({super.key, this.sessionID} );
+  const Login({super.key});
 
   @override
-  State<Login> createState() => _LoginViewState(sessionID: sessionID);
+  State<Login> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<Login> {
@@ -26,7 +29,7 @@ class _LoginViewState extends State<Login> {
   late User? user;
   bool _isLoginButtonPressed = false;
 
-  _LoginViewState({this.sessionID});
+  _LoginViewState();
 
   @override
   void initState() {
@@ -41,7 +44,6 @@ class _LoginViewState extends State<Login> {
   Future<void> performLogin() async {
     await DefaultCacheManager().emptyCache();
     await auth.Authentication.initializeFirebase(context: context);
-    // Выполняется только после того, как initializeFirebase завершена
     if ( user != null) {
       if(sessionID != null){
           try {
@@ -50,19 +52,7 @@ class _LoginViewState extends State<Login> {
             return;
           } catch (e) {
             user = null;
-            showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: const Text('Ошибка'),
-                content: const Text('Сессия недоступна'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            );
+            showModalWindow(context, 'Ошибка', 'Сессия недоступна', 'OK');
           }
       }
       else{
@@ -80,20 +70,9 @@ class _LoginViewState extends State<Login> {
     var fragmentUri = Uri.parse(fullUri.fragment);
     sessionID = fragmentUri.queryParameters['sessionID'];
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(50.0),
-          child: AppBar(
-            title: Image.asset(
-              "assets/wash_logo.png",
-              width: 200,
-              height: 200,
-            ),
-            shadowColor: Colors.white,
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            elevation: 0,
-            centerTitle: false,
-          ),
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: LoginAppBar(),
         ),
       body: SafeArea(
                 child: Center(
@@ -109,11 +88,9 @@ class _LoginViewState extends State<Login> {
                               child: Center(
                                 child: user != null
                                     ? Column(
-                                  children: const [
-                                    SizedBox(height: 500,),
-                                    CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                                    ),
+                                  children: [
+                                    const SizedBox(height: 500,),
+                                    ProgressIndicators.black(),
                                   ],
                                 ) : SizedBox(
                                     height: 150,
@@ -124,14 +101,7 @@ class _LoginViewState extends State<Login> {
                                           height: 50,
                                           width: 300,
                                           child: ElevatedButton(
-                                            style: ButtonStyle(
-                                                backgroundColor: const MaterialStatePropertyAll<Color>(Color.fromRGBO(227,1,15, 1)),
-                                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                                    RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(1),
-                                                    )
-                                                )
-                                            ),
+                                            style: ButtonStyles.redButton(),
                                             onPressed: _isLoginButtonPressed ? null : () async {
                                               setState(() {
                                                 _isLoginButtonPressed = true;
@@ -143,19 +113,14 @@ class _LoginViewState extends State<Login> {
                                                   _isLoginButtonPressed = false;
                                                 });
                                                 return;
-                                              };
+                                              }
                                               authProvider.user = user;
                                               setState(() {
                                                 _isLoginButtonPressed = false;
                                               });
                                             },
-                                            child: const Text("Войти", style:
-                                            TextStyle(
-                                              fontSize: 22,
-                                              fontFamily: 'RobotoCondensed',
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w700,
-                                            ),
+                                            child: Text("Войти",
+                                                style: TextStyles.enterText(),
                                             ),
                                           ),
                                         ),
@@ -163,13 +128,9 @@ class _LoginViewState extends State<Login> {
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            const Text(
-                                                'Вход с  ',
-                                                style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontFamily: 'RobotoCondensed',
-                                                  fontWeight: FontWeight.w400,
-                                                )
+                                            Text(
+                                              'Вход с  ',
+                                              style: TextStyles.additionalText(),
                                             ),
                                             Image.asset(
                                               'google_logo.png',
@@ -184,27 +145,12 @@ class _LoginViewState extends State<Login> {
                                             children: [
                                               TextSpan(
                                                 text: 'Как пользоваться бонусной программой?',
-                                                style: const TextStyle(
-                                                  color: Colors.blue,
-                                                  decoration: TextDecoration.underline,
-                                                ),
+                                                style: TextStyles.infoText(),
                                                 recognizer: TapGestureRecognizer()
                                                   ..onTap = () {
-                                                    showDialog<String>(
-                                                      context: context,
-                                                      builder: (BuildContext context) => AlertDialog(
-                                                        title: const Text('Информация'),
-                                                        content: const Text('1. Нажмите "Войти" и авторизируйтсь в своём гугл-аккаунте.'
-                                                            '\n2. Введите количество бонусов, которое хотите списать.'
-                                                            '\n3. Нажмите кнопку "Списать". Зачисленные бонусы отобразятся на терминале.'),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            onPressed: () => Navigator.pop(context, 'OK'),
-                                                            child: const Text('OK'),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    );
+                                                    showModalWindow(context, 'Информация', '1. Нажмите "Войти" и авторизируйтсь в своём гугл-аккаунте.'
+                                                        '\n2. Введите количество бонусов, которое хотите списать.'
+                                                        '\n3. Нажмите кнопку "Списать". Зачисленные бонусы отобразятся на терминале.', 'OK');
                                                   },
                                               ),
                                             ],
@@ -216,11 +162,7 @@ class _LoginViewState extends State<Login> {
                               ),
                             );
                           }
-                          return const CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.black,
-                            ),
-                          );
+                          return ProgressIndicators.black();
                         },
                       ),
                     ],
