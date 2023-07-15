@@ -17,6 +17,18 @@ class ButtonStyles {
     );
   }
 
+  static ButtonStyle inactiveRedButton() {
+    return ElevatedButton.styleFrom(
+      primary: Colors.red.shade200,  // устанавливаем более бледный оттенок красного
+      onPrimary: Colors.white,
+      minimumSize: const Size(88, 36),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+    );
+  }
+
   static ButtonStyle whiteButton() {
     return ButtonStyle(
         side: MaterialStateBorderSide.resolveWith((states) => const BorderSide(width: 3, color: Colors.white)),

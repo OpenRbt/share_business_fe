@@ -101,13 +101,12 @@ class _LoginViewState extends State<Login> {
                                           height: 50,
                                           width: 300,
                                           child: ElevatedButton(
-                                            style: ButtonStyles.redButton(),
+                                            style: _isLoginButtonPressed ? ButtonStyles.inactiveRedButton() : ButtonStyles.redButton(),
                                             onPressed: _isLoginButtonPressed ? null : () async {
                                               setState(() {
                                                 _isLoginButtonPressed = true;
                                               });
-                                              user =
-                                              await auth.Authentication.signInWithGoogle(context: context);
+                                              user = await auth.Authentication.signInWithGoogle(context: context);
                                               if(user == null ){
                                                 setState(() {
                                                   _isLoginButtonPressed = false;
@@ -120,7 +119,7 @@ class _LoginViewState extends State<Login> {
                                               });
                                             },
                                             child: Text("Войти",
-                                                style: TextStyles.enterText(),
+                                              style: TextStyles.enterText(),
                                             ),
                                           ),
                                         ),
@@ -148,9 +147,9 @@ class _LoginViewState extends State<Login> {
                                                 style: TextStyles.infoText(),
                                                 recognizer: TapGestureRecognizer()
                                                   ..onTap = () {
-                                                    showModalWindow(context, 'Информация', '1. Нажмите "Войти" и авторизируйтсь в своём гугл-аккаунте.'
-                                                        '\n2. Введите количество бонусов, которое хотите списать.'
-                                                        '\n3. Нажмите кнопку "Списать". Зачисленные бонусы отобразятся на терминале.', 'OK');
+                                                    showModalWindow(context, 'Информация', '1. Нажмите "Войти" и авторизируйтсь в своём гугл-аккаунте'
+                                                        '\n2. Введите количество бонусов, которое хотите списать'
+                                                        '\n3. Нажмите кнопку "Списать". Зачисленные бонусы отобразятся на терминале', 'OK');
                                                   },
                                               ),
                                             ],

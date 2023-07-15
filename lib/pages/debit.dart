@@ -281,21 +281,21 @@ class _DebitState extends State<Debit> {
                                       margin:
                                           const EdgeInsets.only(right: 10.0),
                                       child: ElevatedButton(
-                                        style: ButtonStyles.redButton(),
-                                        onPressed: () async {
+                                        style: _isAcceptButtonPressed ? ButtonStyles.inactiveRedButton() : ButtonStyles.redButton(),
+                                        onPressed: _isAcceptButtonPressed ? null : () async {
                                           setState(() {
-                                            _isAcceptButtonPressed = false;
+                                            _isAcceptButtonPressed = true;
                                           });
                                           try {
                                             await Common.sessionApi!
                                                 .postSession(sessionID!,
-                                                    body: BonusCharge(
-                                                        amount: bonus)
+                                                body: BonusCharge(
+                                                    amount: bonus)
                                             );
                                             GetBalance200Response?
-                                                balanceResponse = await Common
-                                                    .userApi!
-                                                    .getBalance();
+                                            balanceResponse = await Common
+                                                .userApi!
+                                                .getBalance();
                                             setState(() {
                                               bonusBalance =
                                                   balanceResponse?.balance ?? 0;
