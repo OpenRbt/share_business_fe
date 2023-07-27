@@ -11,19 +11,19 @@
 part of openapi.api;
 
 
-class SessionApi {
-  SessionApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
+class SessionsApi {
+  SessionsApi([ApiClient? apiClient]) : apiClient = apiClient ?? defaultApiClient;
 
   final ApiClient apiClient;
 
-  /// Performs an HTTP 'POST /session/{sessionId}/assign-user' operation and returns the [Response].
+  /// Performs an HTTP 'POST /session/{id}/assign-user' operation and returns the [Response].
   /// Parameters:
   ///
-  /// * [String] sessionId (required):
-  Future<Response> assignUserToSessionWithHttpInfo(String sessionId,) async {
+  /// * [String] id (required):
+  Future<Response> assignUserToSessionWithHttpInfo(String id,) async {
     // ignore: prefer_const_declarations
-    final path = r'/session/{sessionId}/assign-user'
-      .replaceAll('{sessionId}', sessionId);
+    final path = r'/session/{id}/assign-user'
+      .replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody;
@@ -48,72 +48,24 @@ class SessionApi {
 
   /// Parameters:
   ///
-  /// * [String] sessionId (required):
-  Future<void> assignUserToSession(String sessionId,) async {
-    final response = await assignUserToSessionWithHttpInfo(sessionId,);
+  /// * [String] id (required):
+  Future<void> assignUserToSession(String id,) async {
+    final response = await assignUserToSessionWithHttpInfo(id,);
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
   }
 
-  /// Performs an HTTP 'GET /session/{UID}' operation and returns the [Response].
+  /// Performs an HTTP 'POST /sessions/{id}/bonuses' operation and returns the [Response].
   /// Parameters:
   ///
-  /// * [String] UID (required):
-  Future<Response> getSessionWithHttpInfo(String UID,) async {
-    // ignore: prefer_const_declarations
-    final path = r'/session/{UID}'
-      .replaceAll('{UID}', UID);
-
-    // ignore: prefer_final_locals
-    Object? postBody;
-
-    final queryParams = <QueryParam>[];
-    final headerParams = <String, String>{};
-    final formParams = <String, String>{};
-
-    const contentTypes = <String>[];
-
-
-    return apiClient.invokeAPI(
-      path,
-      'GET',
-      queryParams,
-      postBody,
-      headerParams,
-      formParams,
-      contentTypes.isEmpty ? null : contentTypes.first,
-    );
-  }
-
-  /// Parameters:
-  ///
-  /// * [String] UID (required):
-  Future<Session?> getSession(String UID,) async {
-    final response = await getSessionWithHttpInfo(UID,);
-    if (response.statusCode >= HttpStatus.badRequest) {
-      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
-    }
-    // When a remote server returns no body with a status of 204, we shall not decode it.
-    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
-    // FormatException when trying to decode an empty string.
-    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
-      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Session',) as Session;
-    
-    }
-    return null;
-  }
-
-  /// Performs an HTTP 'POST /session/{UID}/bonuses' operation and returns the [Response].
-  /// Parameters:
-  ///
-  /// * [String] UID (required):
+  /// * [String] id (required):
   ///
   /// * [BonusCharge] body:
-  Future<Response> postSessionWithHttpInfo(String UID, { BonusCharge? body, }) async {
+  Future<Response> chargeBonusesOnSessionWithHttpInfo(String id, { BonusCharge? body, }) async {
     // ignore: prefer_const_declarations
-    final path = r'/session/{UID}/bonuses'
-      .replaceAll('{UID}', UID);
+    final path = r'/sessions/{id}/bonuses'
+      .replaceAll('{id}', id);
 
     // ignore: prefer_final_locals
     Object? postBody = body;
@@ -138,11 +90,11 @@ class SessionApi {
 
   /// Parameters:
   ///
-  /// * [String] UID (required):
+  /// * [String] id (required):
   ///
   /// * [BonusCharge] body:
-  Future<BonusCharge?> postSession(String UID, { BonusCharge? body, }) async {
-    final response = await postSessionWithHttpInfo(UID,  body: body, );
+  Future<BonusCharge?> chargeBonusesOnSession(String id, { BonusCharge? body, }) async {
+    final response = await chargeBonusesOnSessionWithHttpInfo(id,  body: body, );
     if (response.statusCode >= HttpStatus.badRequest) {
       throw ApiException(response.statusCode, await _decodeBodyBytes(response));
     }
@@ -151,6 +103,54 @@ class SessionApi {
     // FormatException when trying to decode an empty string.
     if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
       return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'BonusCharge',) as BonusCharge;
+    
+    }
+    return null;
+  }
+
+  /// Performs an HTTP 'GET /sessions/{id}' operation and returns the [Response].
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Response> getSessionByIdWithHttpInfo(String id,) async {
+    // ignore: prefer_const_declarations
+    final path = r'/sessions/{id}'
+      .replaceAll('{id}', id);
+
+    // ignore: prefer_final_locals
+    Object? postBody;
+
+    final queryParams = <QueryParam>[];
+    final headerParams = <String, String>{};
+    final formParams = <String, String>{};
+
+    const contentTypes = <String>[];
+
+
+    return apiClient.invokeAPI(
+      path,
+      'GET',
+      queryParams,
+      postBody,
+      headerParams,
+      formParams,
+      contentTypes.isEmpty ? null : contentTypes.first,
+    );
+  }
+
+  /// Parameters:
+  ///
+  /// * [String] id (required):
+  Future<Session?> getSessionById(String id,) async {
+    final response = await getSessionByIdWithHttpInfo(id,);
+    if (response.statusCode >= HttpStatus.badRequest) {
+      throw ApiException(response.statusCode, await _decodeBodyBytes(response));
+    }
+    // When a remote server returns no body with a status of 204, we shall not decode it.
+    // At the time of writing this, `dart:convert` will throw an "Unexpected end of input"
+    // FormatException when trying to decode an empty string.
+    if (response.body.isNotEmpty && response.statusCode != HttpStatus.noContent) {
+      return await apiClient.deserializeAsync(await _decodeBodyBytes(response), 'Session',) as Session;
     
     }
     return null;

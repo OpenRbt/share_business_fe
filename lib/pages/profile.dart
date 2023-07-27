@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +25,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
 
   String? sessionID = "";
-  late User? user;
+  late auth.User? user;
 
   late Timer _profileRefresh;
 
@@ -42,9 +42,9 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
-  Future<Profile?> _refreshProfile() async {
+  Future<User?> _refreshProfile() async {
     try{
-      Future<Profile?> prof = Common.userApi!.getProfile();
+      Future<User?> prof = Common.userApi!.getCurrentUser();
       return prof;
     } on HttpException {
       if (kDebugMode) {
@@ -69,9 +69,9 @@ class _ProfilePageState extends State<ProfilePage> {
           child: MainAppBar(),
         ),
         drawer: SideMenu(sessionID: sessionID),
-        body: FutureBuilder<Profile?> (
+        body: FutureBuilder<User?> (
           future: _refreshProfile(),
-          builder: (BuildContext context, AsyncSnapshot<Profile?> snapshot){
+          builder: (BuildContext context, AsyncSnapshot<User?> snapshot){
             if (snapshot.hasData){
               return SafeArea(
                   child: Center(
@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           width: 2,
                         ),
                       ),
-                      margin:  const EdgeInsets.fromLTRB(40, 80, 40, 400),
+                      margin:  const EdgeInsets.fromLTRB(40, 80, 40, 50),
                       padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                       child: Column(
                         textDirection: TextDirection.ltr,
@@ -122,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               Flexible(
                                 child: Text(
-                                  'Ожидает начисления ${snapshot.data?.balance ?? "0"}',
+                                  'Ожидает начисления ${snapshot.data?.pendingBalance ?? "0"}',
                                   style: TextStyles.profileInfoText(),
                                 ),
                               )

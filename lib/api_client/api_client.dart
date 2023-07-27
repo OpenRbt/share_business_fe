@@ -11,7 +11,7 @@
 part of openapi.api;
 
 class ApiClient {
-  ApiClient({this.basePath = 'https://dev.openwashing.com/api/bonus', this.authentication,});
+  ApiClient({this.basePath = 'http://localhost', this.authentication,});
 
   final String basePath;
   final Authentication? authentication;
@@ -185,16 +185,22 @@ class ApiClient {
           return BonusCharge.fromJson(value);
         case 'Error':
           return Error.fromJson(value);
-        case 'GetBalance200Response':
-          return GetBalance200Response.fromJson(value);
         case 'HealthCheck200Response':
           return HealthCheck200Response.fromJson(value);
-        case 'Profile':
-          return Profile.fromJson(value);
+        case 'Pagination':
+          return Pagination.fromJson(value);
         case 'Session':
           return Session.fromJson(value);
+        case 'User':
+          return User.fromJson(value);
+        case 'UserUpdate':
+          return UserUpdate.fromJson(value);
         case 'WashServer':
           return WashServer.fromJson(value);
+        case 'WashServerCreation':
+          return WashServerCreation.fromJson(value);
+        case 'WashServerUpdate':
+          return WashServerUpdate.fromJson(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

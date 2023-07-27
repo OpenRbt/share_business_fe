@@ -13,9 +13,20 @@ part of openapi.api;
 class WashServer {
   /// Returns a new [WashServer] instance.
   WashServer({
+    this.id,
     this.name,
     this.description,
+    this.serviceKey,
+    this.createdBy,
   });
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? id;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -33,31 +44,68 @@ class WashServer {
   ///
   String? description;
 
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? serviceKey;
+
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  String? createdBy;
+
   @override
   bool operator ==(Object other) => identical(this, other) || other is WashServer &&
+     other.id == id &&
      other.name == name &&
-     other.description == description;
+     other.description == description &&
+     other.serviceKey == serviceKey &&
+     other.createdBy == createdBy;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
+    (id == null ? 0 : id!.hashCode) +
     (name == null ? 0 : name!.hashCode) +
-    (description == null ? 0 : description!.hashCode);
+    (description == null ? 0 : description!.hashCode) +
+    (serviceKey == null ? 0 : serviceKey!.hashCode) +
+    (createdBy == null ? 0 : createdBy!.hashCode);
 
   @override
-  String toString() => 'WashServer[name=$name, description=$description]';
+  String toString() => 'WashServer[id=$id, name=$name, description=$description, serviceKey=$serviceKey, createdBy=$createdBy]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.name != null) {
-      json[r'Name'] = this.name;
+    if (this.id != null) {
+      json[r'id'] = this.id;
     } else {
-      json[r'Name'] = null;
+      json[r'id'] = null;
+    }
+    if (this.name != null) {
+      json[r'name'] = this.name;
+    } else {
+      json[r'name'] = null;
     }
     if (this.description != null) {
-      json[r'Description'] = this.description;
+      json[r'description'] = this.description;
     } else {
-      json[r'Description'] = null;
+      json[r'description'] = null;
+    }
+    if (this.serviceKey != null) {
+      json[r'serviceKey'] = this.serviceKey;
+    } else {
+      json[r'serviceKey'] = null;
+    }
+    if (this.createdBy != null) {
+      json[r'createdBy'] = this.createdBy;
+    } else {
+      json[r'createdBy'] = null;
     }
     return json;
   }
@@ -81,8 +129,11 @@ class WashServer {
       }());
 
       return WashServer(
-        name: mapValueOfType<String>(json, r'Name'),
-        description: mapValueOfType<String>(json, r'Description'),
+        id: mapValueOfType<String>(json, r'id'),
+        name: mapValueOfType<String>(json, r'name'),
+        description: mapValueOfType<String>(json, r'description'),
+        serviceKey: mapValueOfType<String>(json, r'serviceKey'),
+        createdBy: mapValueOfType<String>(json, r'createdBy'),
       );
     }
     return null;

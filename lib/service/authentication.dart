@@ -7,8 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../main.dart';
-
 class Authentication {
 
   static Future<FirebaseApp> initializeFirebase({required BuildContext context}) async {
@@ -27,8 +25,6 @@ class Authentication {
       GoogleAuthProvider authProvider = GoogleAuthProvider();
       try {
         await auth.signInWithRedirect(authProvider);
-        log("authProvider.parameters.keys:");
-        log(authProvider.parameters.keys.toString());
         final UserCredential userCredential = await auth.getRedirectResult();
 
         user = userCredential.user;

@@ -7,7 +7,7 @@ class TextStyles {
 
   static TextStyle profileInfoText() {
     return const TextStyle(
-      fontSize: 40,
+      fontSize: 30,
       fontFamily: 'RobotoCondensed',
       color: Colors.black,
       fontWeight: FontWeight.w700,

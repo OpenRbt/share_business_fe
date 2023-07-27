@@ -10,11 +10,21 @@
 
 part of openapi.api;
 
-class GetBalance200Response {
-  /// Returns a new [GetBalance200Response] instance.
-  GetBalance200Response({
-    this.balance,
+class Pagination {
+  /// Returns a new [Pagination] instance.
+  Pagination({
+    this.limit,
+    this.offset,
   });
+
+  /// Maximum value: 100
+  ///
+  /// Please note: This property should have been non-nullable! Since the specification file
+  /// does not include a default value (using the "default:" property), however, the generated
+  /// source code must fall back to having a nullable type.
+  /// Consider adding a "default:" property in the specification file to hide this note.
+  ///
+  int? limit;
 
   ///
   /// Please note: This property should have been non-nullable! Since the specification file
@@ -22,34 +32,41 @@ class GetBalance200Response {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  int? balance;
+  int? offset;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is GetBalance200Response &&
-     other.balance == balance;
+  bool operator ==(Object other) => identical(this, other) || other is Pagination &&
+     other.limit == limit &&
+     other.offset == offset;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (balance == null ? 0 : balance!.hashCode);
+    (limit == null ? 0 : limit!.hashCode) +
+    (offset == null ? 0 : offset!.hashCode);
 
   @override
-  String toString() => 'GetBalance200Response[balance=$balance]';
+  String toString() => 'Pagination[limit=$limit, offset=$offset]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.balance != null) {
-      json[r'balance'] = this.balance;
+    if (this.limit != null) {
+      json[r'limit'] = this.limit;
     } else {
-      json[r'balance'] = null;
+      json[r'limit'] = null;
+    }
+    if (this.offset != null) {
+      json[r'offset'] = this.offset;
+    } else {
+      json[r'offset'] = null;
     }
     return json;
   }
 
-  /// Returns a new [GetBalance200Response] instance and imports its values from
+  /// Returns a new [Pagination] instance and imports its values from
   /// [value] if it's a [Map], null otherwise.
   // ignore: prefer_constructors_over_static_methods
-  static GetBalance200Response? fromJson(dynamic value) {
+  static Pagination? fromJson(dynamic value) {
     if (value is Map) {
       final json = value.cast<String, dynamic>();
 
@@ -58,24 +75,25 @@ class GetBalance200Response {
       // Note 2: this code is stripped in release mode!
       assert(() {
         requiredKeys.forEach((key) {
-          assert(json.containsKey(key), 'Required key "GetBalance200Response[$key]" is missing from JSON.');
-          assert(json[key] != null, 'Required key "GetBalance200Response[$key]" has a null value in JSON.');
+          assert(json.containsKey(key), 'Required key "Pagination[$key]" is missing from JSON.');
+          assert(json[key] != null, 'Required key "Pagination[$key]" has a null value in JSON.');
         });
         return true;
       }());
 
-      return GetBalance200Response(
-        balance: mapValueOfType<int>(json, r'balance'),
+      return Pagination(
+        limit: mapValueOfType<int>(json, r'limit'),
+        offset: mapValueOfType<int>(json, r'offset'),
       );
     }
     return null;
   }
 
-  static List<GetBalance200Response>? listFromJson(dynamic json, {bool growable = false,}) {
-    final result = <GetBalance200Response>[];
+  static List<Pagination>? listFromJson(dynamic json, {bool growable = false,}) {
+    final result = <Pagination>[];
     if (json is List && json.isNotEmpty) {
       for (final row in json) {
-        final value = GetBalance200Response.fromJson(row);
+        final value = Pagination.fromJson(row);
         if (value != null) {
           result.add(value);
         }
@@ -84,12 +102,12 @@ class GetBalance200Response {
     return result.toList(growable: growable);
   }
 
-  static Map<String, GetBalance200Response> mapFromJson(dynamic json) {
-    final map = <String, GetBalance200Response>{};
+  static Map<String, Pagination> mapFromJson(dynamic json) {
+    final map = <String, Pagination>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = GetBalance200Response.fromJson(entry.value);
+        final value = Pagination.fromJson(entry.value);
         if (value != null) {
           map[entry.key] = value;
         }
@@ -98,13 +116,13 @@ class GetBalance200Response {
     return map;
   }
 
-  // maps a json object with a list of GetBalance200Response-objects as value to a dart map
-  static Map<String, List<GetBalance200Response>> mapListFromJson(dynamic json, {bool growable = false,}) {
-    final map = <String, List<GetBalance200Response>>{};
+  // maps a json object with a list of Pagination-objects as value to a dart map
+  static Map<String, List<Pagination>> mapListFromJson(dynamic json, {bool growable = false,}) {
+    final map = <String, List<Pagination>>{};
     if (json is Map && json.isNotEmpty) {
       json = json.cast<String, dynamic>(); // ignore: parameter_assignments
       for (final entry in json.entries) {
-        final value = GetBalance200Response.listFromJson(entry.value, growable: growable,);
+        final value = Pagination.listFromJson(entry.value, growable: growable,);
         if (value != null) {
           map[entry.key] = value;
         }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,11 +46,17 @@ void main() async {
   LocalStorage storage = LocalStorage('share_business');
   await storage.ready;
 
-  Common.userApi = UserApi(ApiClient(authentication: HttpBearerAuth()));
-  Common.sessionApi = SessionApi(ApiClient(authentication: HttpBearerAuth()));
+  Common.userApi = UsersApi(ApiClient(
+      authentication: HttpBearerAuth(),
+      basePath: 'https://dev.openwashing.com/api'
+  ));
+  Common.sessionApi = SessionsApi(ApiClient(
+      authentication: HttpBearerAuth(),
+      basePath: 'https://dev.openwashing.com/api'
+  ));
 
 
-  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+  auth.FirebaseAuth.instance.authStateChanges().listen((auth.User? user) {
     if (user == null) {
       routemaster.popUntil((RouteData data) {
         if (data.fullPath == "/") {
@@ -61,7 +67,7 @@ void main() async {
     }
   });
 
-  FirebaseAuth.instance.idTokenChanges().listen((User? user) async {
+  auth.FirebaseAuth.instance.idTokenChanges().listen((auth.User? user) async {
     if (user == null) {
       Common.SetAuthToken("");
     } else {

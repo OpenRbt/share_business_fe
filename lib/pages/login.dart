@@ -47,7 +47,7 @@ class _LoginViewState extends State<Login> {
     if ( user != null) {
       if(sessionID != null){
           try {
-            await Common.sessionApi!.assignUserToSession(sessionID!).timeout(const Duration(seconds: 3));
+            await Common.sessionApi!.assignUserToSession(sessionID!);
             routemaster.push('/debit?sessionID=${sessionID!}');
             return;
           } catch (e) {
@@ -64,6 +64,7 @@ class _LoginViewState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    _isLoginButtonPressed = false;
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
     var fullUri = Uri.parse(window.location.href);

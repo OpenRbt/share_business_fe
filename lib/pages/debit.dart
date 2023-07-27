@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:html';
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +34,8 @@ class _DebitState extends State<Debit> {
   bool _isAcceptButtonPressed = false;
 
   var txt = TextEditingController();
-  late User? user;
+  late auth.User? user;
+  late User? serviceUser;
 
   @override
   void dispose() {
@@ -46,9 +47,9 @@ class _DebitState extends State<Debit> {
         int count = 0;
         while (count != 10){
           try {
-            Future<Session?> session = Common.sessionApi!.getSession(sessionID!);
-            GetBalance200Response? balanceResponse = await Common.userApi!.getBalance();
-            bonusBalance = balanceResponse?.balance ?? 0;
+            Future<Session?> session = Common.sessionApi!.getSessionById(sessionID!);
+            serviceUser = await Common.userApi!.getCurrentUser();
+            bonusBalance = serviceUser?.balance ?? 0;
             return session;
           } on TimeoutException catch (e) {
             count++;
@@ -288,17 +289,14 @@ class _DebitState extends State<Debit> {
                                           });
                                           try {
                                             await Common.sessionApi!
-                                                .postSession(sessionID!,
+                                                .chargeBonusesOnSession(sessionID!,
                                                 body: BonusCharge(
                                                     amount: bonus)
                                             );
-                                            GetBalance200Response?
-                                            balanceResponse = await Common
-                                                .userApi!
-                                                .getBalance();
+                                            User? userResponse = await Common.userApi!.getCurrentUser();
                                             setState(() {
                                               bonusBalance =
-                                                  balanceResponse?.balance ?? 0;
+                                                  userResponse?.balance ?? 0;
                                               bonus = 0;
                                               _currentSliderValue = 0;
                                               txt.text = 0.toString();
