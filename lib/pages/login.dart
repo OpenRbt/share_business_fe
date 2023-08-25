@@ -64,12 +64,15 @@ class _LoginViewState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+
     _isLoginButtonPressed = false;
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
+
     var fullUri = Uri.parse(window.location.href);
     var fragmentUri = Uri.parse(fullUri.fragment);
     sessionID = fragmentUri.queryParameters['sessionID'];
+
     return Scaffold(
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(50.0),

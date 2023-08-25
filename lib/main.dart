@@ -46,15 +46,7 @@ void main() async {
   LocalStorage storage = LocalStorage('share_business');
   await storage.ready;
 
-  Common.userApi = UsersApi(ApiClient(
-      authentication: HttpBearerAuth(),
-      basePath: 'https://dev.openwashing.com/api'
-  ));
-  Common.sessionApi = SessionsApi(ApiClient(
-      authentication: HttpBearerAuth(),
-      basePath: 'https://dev.openwashing.com/api'
-  ));
-
+  Common.initializeApis('https://dev.openwashing.com/api');
 
   auth.FirebaseAuth.instance.authStateChanges().listen((auth.User? user) {
     if (user == null) {

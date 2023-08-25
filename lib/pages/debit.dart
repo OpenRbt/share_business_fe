@@ -48,8 +48,9 @@ class _DebitState extends State<Debit> {
         while (count != 10){
           try {
             Future<Session?> session = Common.sessionApi!.getSessionById(sessionID!);
-            serviceUser = await Common.userApi!.getCurrentUser();
-            bonusBalance = serviceUser?.balance ?? 0;
+            Session? sessionInfo = await Common.sessionApi!.getSessionById(sessionID!);
+            Wallet? wallet = await Common.walletApi!.getWalletByOrganizationId((sessionInfo?.washServer?.organizationId) ?? "");
+            bonusBalance = wallet?.balance ?? 0;
             return session;
           } on TimeoutException catch (e) {
             count++;
@@ -293,10 +294,11 @@ class _DebitState extends State<Debit> {
                                                 body: BonusCharge(
                                                     amount: bonus)
                                             );
-                                            User? userResponse = await Common.userApi!.getCurrentUser();
+
+                                            Wallet? walletResponse = await Common.walletApi!.getWalletByOrganizationId((snapshot.data?.washServer?.organizationId) ?? "");
                                             setState(() {
                                               bonusBalance =
-                                                  userResponse?.balance ?? 0;
+                                                  walletResponse?.balance ?? 0;
                                               bonus = 0;
                                               _currentSliderValue = 0;
                                               txt.text = 0.toString();

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -13,6 +14,7 @@ import '../service/authProvider.dart';
 import '../widgetStyles/text/text.dart';
 import '../widgets/appBars/main_app_bar.dart';
 import '../widgets/progressIndicators/progress_indicators.dart';
+import '../widgets/userBalance/UserBalanceView.dart';
 
 class ProfilePage extends StatefulWidget {
 
@@ -26,7 +28,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   String? sessionID = "";
   late auth.User? user;
-
+  late List<Wallet>? wallets = [];
+  late List<Organization>? organizations = [];
   late Timer _profileRefresh;
 
   @override
@@ -45,6 +48,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<User?> _refreshProfile() async {
     try{
       Future<User?> prof = Common.userApi!.getCurrentUser();
+      /*
+      wallets = await Common.walletApi!.getWallets(body: Pagination(limit: 100, offset: 0));
+      List<String> organizationIds = [];
+      wallets?.forEach((element) {
+        organizationIds.add((element.organizationId) ?? "");
+      });
+      organizations = await Common.organizationApi!.getOrganizations(ids: organizationIds);
+       */
       return prof;
     } on HttpException {
       if (kDebugMode) {
@@ -75,61 +86,52 @@ class _ProfilePageState extends State<ProfilePage> {
             if (snapshot.hasData){
               return SafeArea(
                   child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.red,
-                          width: 2,
-                        ),
-                      ),
-                      margin:  const EdgeInsets.fromLTRB(40, 80, 40, 50),
-                      padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                      child: Column(
-                        textDirection: TextDirection.ltr,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          (user?.displayName == null || user!.displayName!.isEmpty) ? Container():
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text('Имя ${user!.displayName}',
-                                style: TextStyles.profileInfoText(),
-                              ),)
-                            ],
-                          ),
-                          const SizedBox(height: 5,),
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text('Почта ${user?.email}',
-                                  style: TextStyles.profileInfoText(),
+                    child: Column(
+                      textDirection: TextDirection.ltr,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        (user?.displayName == null || user!.displayName!.isEmpty) ? Container():
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.red,
+                                  width: 2,
                                 ),
-                              )
-                            ],
+                              ),
+                              margin:  const EdgeInsets.fromLTRB(10, 80, 10, 10),
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text('Имя: ${user!.displayName}',
+                                          style: TextStyles.profileInfoText(),
+                                        ),)
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5,),
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text('Почта: ${user?.email}',
+                                          style: TextStyles.profileInfoText(),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                        const SizedBox(height: 5,),
+                        Container(
+                          margin:  const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: UserBalanceView(
+                              wallets: wallets ?? [],
+                              organizations: organizations ?? []
                           ),
-                          const SizedBox(height: 5,),
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                'Баланс ${snapshot.data?.balance ?? "0"}',
-                                style: TextStyles.profileInfoText(),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  'Ожидает начисления ${snapshot.data?.pendingBalance ?? "0"}',
-                                  style: TextStyles.profileInfoText(),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   )
               );
