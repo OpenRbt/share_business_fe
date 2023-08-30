@@ -27,7 +27,6 @@ final routemaster = RoutemasterDelegate(
 );
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   final String response = await rootBundle.loadString('assets/keys.json');
   Map<String, dynamic> jsonData = json.decode(response);

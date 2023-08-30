@@ -48,14 +48,14 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<User?> _refreshProfile() async {
     try{
       Future<User?> prof = Common.userApi!.getCurrentUser();
-      /*
+      print("Before get wallets");
       wallets = await Common.walletApi!.getWallets(body: Pagination(limit: 100, offset: 0));
+      print("After get wallets");
       List<String> organizationIds = [];
       wallets?.forEach((element) {
         organizationIds.add((element.organizationId) ?? "");
       });
       organizations = await Common.organizationApi!.getOrganizations(ids: organizationIds);
-       */
       return prof;
     } on HttpException {
       if (kDebugMode) {
@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     } catch(e){
       if (kDebugMode) {
-        print("OtherException");
+        print("OtherException: $e");
       }
     }
     return null;

@@ -15,14 +15,14 @@ class WashServerCreation {
   WashServerCreation({
     required this.name,
     required this.description,
-    required this.groupId,
+    this.groupId,
   });
 
   String name;
 
   String description;
 
-  String groupId;
+  String? groupId;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is WashServerCreation &&
@@ -35,7 +35,7 @@ class WashServerCreation {
     // ignore: unnecessary_parenthesis
     (name.hashCode) +
     (description.hashCode) +
-    (groupId.hashCode);
+    (groupId == null ? 0 : groupId!.hashCode);
 
   @override
   String toString() => 'WashServerCreation[name=$name, description=$description, groupId=$groupId]';
@@ -44,7 +44,11 @@ class WashServerCreation {
     final json = <String, dynamic>{};
       json[r'name'] = this.name;
       json[r'description'] = this.description;
+    if (this.groupId != null) {
       json[r'groupId'] = this.groupId;
+    } else {
+      json[r'groupId'] = null;
+    }
     return json;
   }
 
@@ -69,7 +73,7 @@ class WashServerCreation {
       return WashServerCreation(
         name: mapValueOfType<String>(json, r'name')!,
         description: mapValueOfType<String>(json, r'description')!,
-        groupId: mapValueOfType<String>(json, r'groupId')!,
+        groupId: mapValueOfType<String>(json, r'groupId'),
       );
     }
     return null;
@@ -121,7 +125,6 @@ class WashServerCreation {
   static const requiredKeys = <String>{
     'name',
     'description',
-    'groupId',
   };
 }
 
