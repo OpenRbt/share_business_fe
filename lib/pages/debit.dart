@@ -50,6 +50,7 @@ class _DebitState extends State<Debit> {
             Future<Session?> session = Common.sessionApi!.getSessionById(sessionID!);
             Session? sessionInfo = await Common.sessionApi!.getSessionById(sessionID!);
             Wallet? wallet = await Common.walletApi!.getWalletByOrganizationId((sessionInfo?.washServer?.organizationId) ?? "");
+            print(wallet?.balance.toString());
             bonusBalance = wallet?.balance ?? 0;
             return session;
           } on TimeoutException catch (e) {
@@ -289,6 +290,7 @@ class _DebitState extends State<Debit> {
                                             _isAcceptButtonPressed = true;
                                           });
                                           try {
+                                            print("bonus: " + bonus.toString());
                                             await Common.sessionApi!
                                                 .chargeBonusesOnSession(sessionID!,
                                                 body: BonusCharge(

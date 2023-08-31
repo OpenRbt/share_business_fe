@@ -38,7 +38,7 @@ class _UserBalanceViewState extends State<UserBalanceView> {
           margin: const EdgeInsets.all(0),
           child: Text(
             "Организация",
-            style: TextStyles.profileInfoText(),
+            style: TextStyles.postText(),
           ),
         )
       ),
@@ -48,14 +48,18 @@ class _UserBalanceViewState extends State<UserBalanceView> {
       (index) => DataRow(
         cells: [
           DataCell(
-            Container(
-              padding: const EdgeInsets.all(0),
-              margin: const EdgeInsets.all(0),
-              child: Text(
-                widget.organizations[index].name ?? " -- ",
-                style: TextStyles.profileInfoText(),
-              ),
-            )
+              Column(
+                children: [
+                  Flexible(
+                      child: Text(
+                        widget.organizations[index].name ?? " -- ",
+                        style: TextStyles.postText(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  )
+                ],
+              )
           ),
         ],
       ),
@@ -72,13 +76,13 @@ class _UserBalanceViewState extends State<UserBalanceView> {
       DataColumn(
         label: Text(
           "Баланс",
-          style: TextStyles.profileInfoText(),
+          style: TextStyles.postText(),
         ),
       ),
       DataColumn(
         label: Text(
-          "Ожидает начисления",
-          style: TextStyles.profileInfoText(),
+          "Ожидает\nначисления",
+          style: TextStyles.postText(),
         ),
       ),
     ];
@@ -90,13 +94,13 @@ class _UserBalanceViewState extends State<UserBalanceView> {
             DataCell(
               Text(
                 widget.wallets[index].balance?.toString() ?? "0",
-                style: TextStyles.profileInfoText(),
+                style: TextStyles.postText(),
               ),
             ),
             DataCell(
               Text(
                 widget.wallets[index].pendingBalance?.toString() ?? "0",
-                style: TextStyles.profileInfoText(),
+                style: TextStyles.postText(),
               ),
             ),
           ],

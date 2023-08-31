@@ -48,9 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<User?> _refreshProfile() async {
     try{
       Future<User?> prof = Common.userApi!.getCurrentUser();
-      print("Before get wallets");
-      wallets = await Common.walletApi!.getWallets(body: Pagination(limit: 100, offset: 0));
-      print("After get wallets");
+      wallets = await Common.walletApi!.getWallets(limit: 100, offset: 0);
       List<String> organizationIds = [];
       wallets?.forEach((element) {
         organizationIds.add((element.organizationId) ?? "");
@@ -84,56 +82,58 @@ class _ProfilePageState extends State<ProfilePage> {
           future: _refreshProfile(),
           builder: (BuildContext context, AsyncSnapshot<User?> snapshot){
             if (snapshot.hasData){
-              return SafeArea(
-                  child: Center(
-                    child: Column(
-                      textDirection: TextDirection.ltr,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        (user?.displayName == null || user!.displayName!.isEmpty) ? Container():
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.red,
-                                  width: 2,
-                                ),
-                              ),
-                              margin:  const EdgeInsets.fromLTRB(10, 80, 10, 10),
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Flexible(
-                                        child: Text('Имя: ${user!.displayName}',
-                                          style: TextStyles.profileInfoText(),
-                                        ),)
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5,),
-                                  Row(
-                                    children: [
-                                      Flexible(
-                                        child: Text('Почта: ${user?.email}',
-                                          style: TextStyles.profileInfoText(),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
+              return ListView(
+                  children: [
+                    Center(
+                      child: Column(
+                        textDirection: TextDirection.ltr,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          (user?.displayName == null || user!.displayName!.isEmpty) ? Container():
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.red,
+                                width: 2,
                               ),
                             ),
-                        const SizedBox(height: 5,),
-                        Container(
-                          margin:  const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: UserBalanceView(
-                              wallets: wallets ?? [],
-                              organizations: organizations ?? []
+                            margin:  const EdgeInsets.fromLTRB(10, 80, 10, 10),
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text('Имя: ${user!.displayName}',
+                                        style: TextStyles.profileInfoText(),
+                                      ),)
+                                  ],
+                                ),
+                                const SizedBox(height: 5,),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text('Почта: ${user?.email}',
+                                        style: TextStyles.profileInfoText(),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        )
-                      ],
-                    ),
-                  )
+                          const SizedBox(height: 5,),
+                          Container(
+                            margin:  const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: UserBalanceView(
+                                wallets: wallets ?? [],
+                                organizations: organizations ?? []
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ]
               );
             }
             else if(snapshot.hasError){
