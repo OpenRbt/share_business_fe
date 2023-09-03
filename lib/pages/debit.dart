@@ -174,7 +174,7 @@ class _DebitState extends State<Debit> {
                                 ),
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
-                                      RegExp(r"[0-9.]")),
+                                      RegExp(r"[0-9]")),
                                   TextInputFormatter.withFunction(
                                       (oldValue, newValue) {
                                     try {
