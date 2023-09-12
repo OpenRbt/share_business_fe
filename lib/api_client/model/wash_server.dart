@@ -16,8 +16,6 @@ class WashServer {
     this.id,
     this.name,
     this.description,
-    this.serviceKey,
-    this.createdBy,
     this.groupId,
     this.organizationId,
   });
@@ -52,22 +50,6 @@ class WashServer {
   /// source code must fall back to having a nullable type.
   /// Consider adding a "default:" property in the specification file to hide this note.
   ///
-  String? serviceKey;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? createdBy;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
   String? groupId;
 
   ///
@@ -83,8 +65,6 @@ class WashServer {
      other.id == id &&
      other.name == name &&
      other.description == description &&
-     other.serviceKey == serviceKey &&
-     other.createdBy == createdBy &&
      other.groupId == groupId &&
      other.organizationId == organizationId;
 
@@ -94,13 +74,11 @@ class WashServer {
     (id == null ? 0 : id!.hashCode) +
     (name == null ? 0 : name!.hashCode) +
     (description == null ? 0 : description!.hashCode) +
-    (serviceKey == null ? 0 : serviceKey!.hashCode) +
-    (createdBy == null ? 0 : createdBy!.hashCode) +
     (groupId == null ? 0 : groupId!.hashCode) +
     (organizationId == null ? 0 : organizationId!.hashCode);
 
   @override
-  String toString() => 'WashServer[id=$id, name=$name, description=$description, serviceKey=$serviceKey, createdBy=$createdBy, groupId=$groupId, organizationId=$organizationId]';
+  String toString() => 'WashServer[id=$id, name=$name, description=$description, groupId=$groupId, organizationId=$organizationId]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
@@ -118,16 +96,6 @@ class WashServer {
       json[r'description'] = this.description;
     } else {
       json[r'description'] = null;
-    }
-    if (this.serviceKey != null) {
-      json[r'serviceKey'] = this.serviceKey;
-    } else {
-      json[r'serviceKey'] = null;
-    }
-    if (this.createdBy != null) {
-      json[r'createdBy'] = this.createdBy;
-    } else {
-      json[r'createdBy'] = null;
     }
     if (this.groupId != null) {
       json[r'groupId'] = this.groupId;
@@ -164,8 +132,6 @@ class WashServer {
         id: mapValueOfType<String>(json, r'id'),
         name: mapValueOfType<String>(json, r'name'),
         description: mapValueOfType<String>(json, r'description'),
-        serviceKey: mapValueOfType<String>(json, r'serviceKey'),
-        createdBy: mapValueOfType<String>(json, r'createdBy'),
         groupId: mapValueOfType<String>(json, r'groupId'),
         organizationId: mapValueOfType<String>(json, r'organizationId'),
       );

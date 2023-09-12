@@ -35,7 +35,6 @@ class _DebitState extends State<Debit> {
 
   var txt = TextEditingController();
   late auth.User? user;
-  late User? serviceUser;
 
   @override
   void dispose() {

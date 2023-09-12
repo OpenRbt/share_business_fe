@@ -189,30 +189,12 @@ class ApiClient {
           return HealthCheck200Response.fromJson(value);
         case 'Organization':
           return Organization.fromJson(value);
-        case 'OrganizationCreation':
-          return OrganizationCreation.fromJson(value);
-        case 'OrganizationUpdate':
-          return OrganizationUpdate.fromJson(value);
-        case 'ServerGroup':
-          return ServerGroup.fromJson(value);
-        case 'ServerGroupCreation':
-          return ServerGroupCreation.fromJson(value);
-        case 'ServerGroupUpdate':
-          return ServerGroupUpdate.fromJson(value);
         case 'Session':
           return Session.fromJson(value);
-        case 'User':
-          return User.fromJson(value);
-        case 'UserRoleUpdate':
-          return UserRoleUpdate.fromJson(value);
         case 'Wallet':
           return Wallet.fromJson(value);
         case 'WashServer':
           return WashServer.fromJson(value);
-        case 'WashServerCreation':
-          return WashServerCreation.fromJson(value);
-        case 'WashServerUpdate':
-          return WashServerUpdate.fromJson(value);
         default:
           dynamic match;
           if (value is List && (match = _regList.firstMatch(targetType)?.group(1)) != null) {

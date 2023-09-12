@@ -13,100 +13,50 @@ part of openapi.api;
 class Wallet {
   /// Returns a new [Wallet] instance.
   Wallet({
-    this.id,
-    this.userId,
-    this.organizationId,
-    this.balance,
-    this.pendingBalance,
+    required this.id,
+    required this.userId,
+    required this.organization,
+    required this.balance,
+    required this.pendingBalance,
   });
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? id;
+  String id;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? userId;
+  String userId;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? organizationId;
+  Organization organization;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? balance;
+  int balance;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  int? pendingBalance;
+  int pendingBalance;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is Wallet &&
      other.id == id &&
      other.userId == userId &&
-     other.organizationId == organizationId &&
+     other.organization == organization &&
      other.balance == balance &&
      other.pendingBalance == pendingBalance;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (userId == null ? 0 : userId!.hashCode) +
-    (organizationId == null ? 0 : organizationId!.hashCode) +
-    (balance == null ? 0 : balance!.hashCode) +
-    (pendingBalance == null ? 0 : pendingBalance!.hashCode);
+    (id.hashCode) +
+    (userId.hashCode) +
+    (organization.hashCode) +
+    (balance.hashCode) +
+    (pendingBalance.hashCode);
 
   @override
-  String toString() => 'Wallet[id=$id, userId=$userId, organizationId=$organizationId, balance=$balance, pendingBalance=$pendingBalance]';
+  String toString() => 'Wallet[id=$id, userId=$userId, organization=$organization, balance=$balance, pendingBalance=$pendingBalance]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.id != null) {
       json[r'id'] = this.id;
-    } else {
-      json[r'id'] = null;
-    }
-    if (this.userId != null) {
       json[r'userId'] = this.userId;
-    } else {
-      json[r'userId'] = null;
-    }
-    if (this.organizationId != null) {
-      json[r'organizationId'] = this.organizationId;
-    } else {
-      json[r'organizationId'] = null;
-    }
-    if (this.balance != null) {
+      json[r'organization'] = this.organization;
       json[r'balance'] = this.balance;
-    } else {
-      json[r'balance'] = null;
-    }
-    if (this.pendingBalance != null) {
       json[r'pendingBalance'] = this.pendingBalance;
-    } else {
-      json[r'pendingBalance'] = null;
-    }
     return json;
   }
 
@@ -129,11 +79,11 @@ class Wallet {
       }());
 
       return Wallet(
-        id: mapValueOfType<String>(json, r'id'),
-        userId: mapValueOfType<String>(json, r'userId'),
-        organizationId: mapValueOfType<String>(json, r'organizationId'),
-        balance: mapValueOfType<int>(json, r'balance'),
-        pendingBalance: mapValueOfType<int>(json, r'pendingBalance'),
+        id: mapValueOfType<String>(json, r'id')!,
+        userId: mapValueOfType<String>(json, r'userId')!,
+        organization: Organization.fromJson(json[r'organization'])!,
+        balance: mapValueOfType<int>(json, r'balance')!,
+        pendingBalance: mapValueOfType<int>(json, r'pendingBalance')!,
       );
     }
     return null;
@@ -183,6 +133,11 @@ class Wallet {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
+    'id',
+    'userId',
+    'organization',
+    'balance',
+    'pendingBalance',
   };
 }
 

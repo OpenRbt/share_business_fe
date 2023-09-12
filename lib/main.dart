@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,7 @@ void main() async {
   LocalStorage storage = LocalStorage('share_business');
   await storage.ready;
 
-  Common.initializeApis('https://dev.openwashing.com/api');
+  Common.initializeApis('https://dev.openwashing.com/api/bonus');
 
   auth.FirebaseAuth.instance.authStateChanges().listen((auth.User? user) {
     if (user == null) {

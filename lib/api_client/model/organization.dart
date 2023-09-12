@@ -13,84 +13,32 @@ part of openapi.api;
 class Organization {
   /// Returns a new [Organization] instance.
   Organization({
-    this.id,
-    this.name,
-    this.description,
-    this.isDefault,
+    required this.id,
+    required this.name,
   });
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? id;
+  String id;
 
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? name;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  String? description;
-
-  ///
-  /// Please note: This property should have been non-nullable! Since the specification file
-  /// does not include a default value (using the "default:" property), however, the generated
-  /// source code must fall back to having a nullable type.
-  /// Consider adding a "default:" property in the specification file to hide this note.
-  ///
-  bool? isDefault;
+  String name;
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is Organization &&
      other.id == id &&
-     other.name == name &&
-     other.description == description &&
-     other.isDefault == isDefault;
+     other.name == name;
 
   @override
   int get hashCode =>
     // ignore: unnecessary_parenthesis
-    (id == null ? 0 : id!.hashCode) +
-    (name == null ? 0 : name!.hashCode) +
-    (description == null ? 0 : description!.hashCode) +
-    (isDefault == null ? 0 : isDefault!.hashCode);
+    (id.hashCode) +
+    (name.hashCode);
 
   @override
-  String toString() => 'Organization[id=$id, name=$name, description=$description, isDefault=$isDefault]';
+  String toString() => 'Organization[id=$id, name=$name]';
 
   Map<String, dynamic> toJson() {
     final json = <String, dynamic>{};
-    if (this.id != null) {
       json[r'id'] = this.id;
-    } else {
-      json[r'id'] = null;
-    }
-    if (this.name != null) {
       json[r'name'] = this.name;
-    } else {
-      json[r'name'] = null;
-    }
-    if (this.description != null) {
-      json[r'description'] = this.description;
-    } else {
-      json[r'description'] = null;
-    }
-    if (this.isDefault != null) {
-      json[r'isDefault'] = this.isDefault;
-    } else {
-      json[r'isDefault'] = null;
-    }
     return json;
   }
 
@@ -113,10 +61,8 @@ class Organization {
       }());
 
       return Organization(
-        id: mapValueOfType<String>(json, r'id'),
-        name: mapValueOfType<String>(json, r'name'),
-        description: mapValueOfType<String>(json, r'description'),
-        isDefault: mapValueOfType<bool>(json, r'isDefault'),
+        id: mapValueOfType<String>(json, r'id')!,
+        name: mapValueOfType<String>(json, r'name')!,
       );
     }
     return null;
@@ -166,6 +112,8 @@ class Organization {
 
   /// The list of required keys that must be present in a JSON.
   static const requiredKeys = <String>{
+    'id',
+    'name',
   };
 }
 

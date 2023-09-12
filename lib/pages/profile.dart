@@ -45,16 +45,14 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
-  Future<User?> _refreshProfile() async {
+  Future<void> _refreshProfile() async {
     try{
-      Future<User?> prof = Common.userApi!.getCurrentUser();
       wallets = await Common.walletApi!.getWallets(limit: 100, offset: 0);
-      List<String> organizationIds = [];
+      organizations?.clear();
       wallets?.forEach((element) {
-        organizationIds.add((element.organizationId) ?? "");
+        organizations?.add(element.organization);
       });
-      organizations = await Common.organizationApi!.getOrganizations(ids: organizationIds);
-      return prof;
+      print(organizations?.length);
     } on HttpException {
       if (kDebugMode) {
         print("HttpException");
@@ -64,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
         print("OtherException: $e");
       }
     }
-    return null;
+    return;
   }
 
   @override
@@ -78,10 +76,10 @@ class _ProfilePageState extends State<ProfilePage> {
           child: MainAppBar(),
         ),
         drawer: SideMenu(sessionID: sessionID),
-        body: FutureBuilder<User?> (
+        body: FutureBuilder<void> (
           future: _refreshProfile(),
-          builder: (BuildContext context, AsyncSnapshot<User?> snapshot){
-            if (snapshot.hasData){
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot){
+            if (snapshot.connectionState == ConnectionState.done){
               return ListView(
                   children: [
                     Center(
