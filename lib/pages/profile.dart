@@ -1,16 +1,18 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:routemaster/routemaster.dart';
 import 'package:share_buisness_front_end/api_client/api.dart';
 import 'package:share_buisness_front_end/pages/side_menu.dart';
 import 'package:share_buisness_front_end/utils/common.dart';
 
+import '../main.dart';
 import '../service/authProvider.dart';
+import '../widgetStyles/buttons/button_styles.dart';
 import '../widgetStyles/text/text.dart';
 import '../widgets/appBars/main_app_bar.dart';
 import '../widgets/progressIndicators/progress_indicators.dart';
@@ -52,7 +54,6 @@ class _ProfilePageState extends State<ProfilePage> {
       wallets?.forEach((element) {
         organizations?.add(element.organization);
       });
-      print(organizations?.length);
     } on HttpException {
       if (kDebugMode) {
         print("HttpException");
@@ -65,92 +66,123 @@ class _ProfilePageState extends State<ProfilePage> {
     return;
   }
 
+  void _showLoginAlert(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Ошибка'),
+        content: const Text('Требуется авторизация'),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: () => {
+              routemaster.popUntil((RouteData data) {
+                if (data.fullPath == "/") {
+                  return true;
+                }
+                return false;
+              })
+            },
+            style: ButtonStyles.redButton(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
-    return user != null ?
-    Scaffold(
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
-          child: MainAppBar(),
-        ),
-        drawer: SideMenu(sessionID: sessionID),
-        body: FutureBuilder<void> (
-          future: _refreshProfile(),
-          builder: (BuildContext context, AsyncSnapshot<void> snapshot){
-            if (snapshot.connectionState == ConnectionState.done){
-              return ListView(
-                  children: [
-                    Center(
-                      child: Column(
-                        textDirection: TextDirection.ltr,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          (user?.displayName == null || user!.displayName!.isEmpty) ? Container():
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.red,
-                                width: 2,
+    if(user != null){
+      return Scaffold(
+          appBar: const PreferredSize(
+            preferredSize: Size.fromHeight(50.0),
+            child: MainAppBar(),
+          ),
+          drawer: SideMenu(sessionID: sessionID),
+          body: FutureBuilder<void> (
+            future: _refreshProfile(),
+            builder: (BuildContext context, AsyncSnapshot<void> snapshot){
+              if (snapshot.connectionState == ConnectionState.done){
+                return ListView(
+                    children: [
+                      Center(
+                        child: Column(
+                          textDirection: TextDirection.ltr,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.red,
+                                  width: 2,
+                                ),
+                              ),
+                              margin:  const EdgeInsets.fromLTRB(10, 80, 10, 10),
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      (user?.displayName == null || user!.displayName!.isEmpty || user?.displayName == 'null') ?
+                                      Container() :
+                                      Flexible(
+                                        child: Text('Имя: ${user!.displayName}',
+                                          style: TextStyles.profileInfoText(),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5,),
+                                  Row(
+                                    children: [
+                                      Flexible(
+                                        child: Text('Почта: ${user?.email}',
+                                          style: TextStyles.profileInfoText(),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            margin:  const EdgeInsets.fromLTRB(10, 80, 10, 10),
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: Text('Имя: ${user!.displayName}',
-                                        style: TextStyles.profileInfoText(),
-                                      ),)
-                                  ],
-                                ),
-                                const SizedBox(height: 5,),
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: Text('Почта: ${user?.email}',
-                                        style: TextStyles.profileInfoText(),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 5,),
-                          Container(
-                            margin:  const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            child: UserBalanceView(
-                                wallets: wallets ?? [],
-                                organizations: organizations ?? []
-                            ),
-                          )
-                        ],
-                      ),
+                            const SizedBox(height: 5,),
+                            Container(
+                              margin:  const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: UserBalanceView(
+                                  wallets: wallets ?? [],
+                                  organizations: organizations ?? []
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ]
+                );
+              }
+              else if(snapshot.hasError){
+                return Container();
+              }
+              else{
+                return Column(
+                  children: [
+                    const SizedBox(
+                      height: 300.0,
+                    ),
+                    Center(
+                        child: ProgressIndicators.black()
                     )
-                  ]
-              );
-            }
-            else if(snapshot.hasError){
-              return Container();
-            }
-            else{
-              return Column(
-                children: [
-                  const SizedBox(
-                    height: 300.0,
-                  ),
-                  Center(
-                    child: ProgressIndicators.black()
-                  )
-                ],
-              );
-            }
-          },
-        )
-    ) : Container();
+                  ],
+                );
+              }
+            },
+          )
+      );
+    }
+    else{
+      WidgetsBinding.instance.addPostFrameCallback((_) => _showLoginAlert(context));
+      return Container();
+    }
   }
 }
