@@ -69,12 +69,14 @@ class _ProfilePageState extends State<ProfilePage> {
   void _showLoginAlert(BuildContext context) {
     showDialog<String>(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) => AlertDialog(
         title: const Text('Ошибка'),
         content: const Text('Требуется авторизация'),
         actions: <Widget>[
           ElevatedButton(
-            onPressed: () => {
+            onPressed: () {
+              Navigator.pop(context);
               routemaster.popUntil((RouteData data) {
                 if (data.fullPath == "/") {
                   return true;
