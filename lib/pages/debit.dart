@@ -80,7 +80,7 @@ class _DebitState extends State<Debit> {
                   return true;
                 }
                 return false;
-              })
+              });
             },
             style: ButtonStyles.redButton(),
             child: const Text('OK'),

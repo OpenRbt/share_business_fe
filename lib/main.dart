@@ -44,7 +44,7 @@ void main() async {
   LocalStorage storage = LocalStorage('share_business');
   await storage.ready;
 
-  Common.initializeApis('https://dev.openwashing.com/api/bonus');
+  Common.initializeApis('https://app.openwashing.com/api/bonus');
 
   auth.FirebaseAuth.instance.authStateChanges().listen((auth.User? user) {
     if (user == null) {

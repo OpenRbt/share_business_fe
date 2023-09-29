@@ -82,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   return true;
                 }
                 return false;
-              })
+              });
             },
             style: ButtonStyles.redButton(),
             child: const Text('OK'),
