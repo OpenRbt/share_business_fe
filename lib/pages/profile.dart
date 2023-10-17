@@ -96,95 +96,104 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     user = authProvider.user;
-    if(user != null){
-      return Scaffold(
-          appBar: const PreferredSize(
-            preferredSize: Size.fromHeight(50.0),
-            child: MainAppBar(),
-          ),
-          drawer: SideMenu(sessionID: sessionID),
-          body: FutureBuilder<void> (
-            future: _refreshProfile(),
-            builder: (BuildContext context, AsyncSnapshot<void> snapshot){
-              if (snapshot.connectionState == ConnectionState.done){
-                return ListView(
-                    children: [
-                      Center(
-                        child: Column(
-                          textDirection: TextDirection.ltr,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.red,
-                                  width: 2,
+
+    return FutureBuilder(
+        future: authProvider.firstUser,
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+
+          if (!snapshot.hasData || snapshot.data == null) {
+            WidgetsBinding.instance.addPostFrameCallback((_) => _showLoginAlert(context));
+            return Container();
+          }
+
+          return Scaffold(
+              appBar: const PreferredSize(
+                preferredSize: Size.fromHeight(50.0),
+                child: MainAppBar(),
+              ),
+              drawer: SideMenu(sessionID: sessionID),
+              body: FutureBuilder<void> (
+                future: _refreshProfile(),
+                builder: (BuildContext context, AsyncSnapshot<void> snapshot){
+                  if (snapshot.connectionState == ConnectionState.done){
+                    return ListView(
+                        children: [
+                          Center(
+                            child: Column(
+                              textDirection: TextDirection.ltr,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.red,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  margin:  const EdgeInsets.fromLTRB(10, 80, 10, 10),
+                                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          (user?.displayName == null || user!.displayName!.isEmpty || user?.displayName == 'null') ?
+                                          Container() :
+                                          Flexible(
+                                            child: Text('Имя: ${user!.displayName}',
+                                              style: TextStyles.profileInfoText(),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5,),
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                            child: Text('Почта: ${user?.email}',
+                                              style: TextStyles.profileInfoText(),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              margin:  const EdgeInsets.fromLTRB(10, 80, 10, 10),
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      (user?.displayName == null || user!.displayName!.isEmpty || user?.displayName == 'null') ?
-                                      Container() :
-                                      Flexible(
-                                        child: Text('Имя: ${user!.displayName}',
-                                          style: TextStyles.profileInfoText(),
-                                        ),
-                                      )
-                                    ],
+                                const SizedBox(height: 5,),
+                                Container(
+                                  margin:  const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  child: UserBalanceView(
+                                      wallets: wallets ?? [],
+                                      organizations: organizations ?? []
                                   ),
-                                  const SizedBox(height: 5,),
-                                  Row(
-                                    children: [
-                                      Flexible(
-                                        child: Text('Почта: ${user?.email}',
-                                          style: TextStyles.profileInfoText(),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                )
+                              ],
                             ),
-                            const SizedBox(height: 5,),
-                            Container(
-                              margin:  const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                              child: UserBalanceView(
-                                  wallets: wallets ?? [],
-                                  organizations: organizations ?? []
-                              ),
-                            )
-                          ],
+                          )
+                        ]
+                    );
+                  }
+                  else if(snapshot.hasError){
+                    return Container();
+                  }
+                  else{
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: 300.0,
                         ),
-                      )
-                    ]
-                );
-              }
-              else if(snapshot.hasError){
-                return Container();
-              }
-              else{
-                return Column(
-                  children: [
-                    const SizedBox(
-                      height: 300.0,
-                    ),
-                    Center(
-                        child: ProgressIndicators.black()
-                    )
-                  ],
-                );
-              }
-            },
-          )
-      );
-    }
-    else{
-      WidgetsBinding.instance.addPostFrameCallback((_) => _showLoginAlert(context));
-      return Container();
-    }
+                        Center(
+                            child: ProgressIndicators.black()
+                        )
+                      ],
+                    );
+                  }
+                },
+              )
+          );
+        }
+    );
   }
 }
