@@ -127,13 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.red,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  margin:  const EdgeInsets.fromLTRB(10, 80, 10, 10),
+                                  margin:  const EdgeInsets.fromLTRB(10, 50, 10, 10),
                                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                   child: Column(
                                     children: [
@@ -162,6 +156,52 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 5,),
+                                Column(
+                                  children: [
+                                    Card(
+                                      color: Colors.green[100], // Цвет для накопленных бонусов
+                                      child: Column(
+                                        children: [
+                                          const ListTile(
+                                            leading: Icon(Icons.account_balance_wallet, color: Colors.green), // Иконка накопленных бонусов
+                                            title: Text('Баланс бонусов'),
+                                          ),
+                                          ...wallets!.map((wallet) {
+                                            return (wallet.balance > 0) ? ListTile(
+                                              title: Text(wallet.organization.name),
+                                              trailing: Text(
+                                                wallet.balance.toString(),
+                                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                              ),
+                                            ) : Container();
+                                          }).toList(),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Card(
+                                      color: Colors.yellow[100], // Цвет для ожидающихся бонусов
+                                      child: Column(
+                                        children: [
+                                          const ListTile(
+                                            leading: Icon(Icons.hourglass_empty, color: Colors.yellow), // Иконка для ожидающихся бонусов
+                                            title: Text('Ожидающие начисления'),
+                                          ),
+                                          ...wallets!.map((bonus) {
+                                            return (bonus.pendingBalance > 0) ? ListTile(
+                                              title: Text(bonus.organization.name),
+                                              trailing: Text(
+                                                bonus.pendingBalance.toString(),
+                                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                              ),
+                                            ) : Container();
+                                          }).toList(),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                                /*
                                 Container(
                                   margin:  const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   child: UserBalanceView(
@@ -169,6 +209,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       organizations: organizations ?? []
                                   ),
                                 )
+                                 */
                               ],
                             ),
                           )
